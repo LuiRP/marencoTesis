@@ -1,0 +1,13 @@
+$enable-gradients: true;
+$primary: #FF7518;
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+.list-group-item.active,
+.list-group-item-action.active {
+    @include gradient-bg($primary);
+
+    &:hover,
+    &:focus {
+        @include gradient-bg(darken($primary, 5%));
+    }
+}
