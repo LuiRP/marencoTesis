@@ -1,3 +1,22 @@
 <aside id="aside">
-    <c-card_basic>{{ slot }}</c-card_basic>
+    <c-card_basic>
+    <div class="d-flex flex-row flex-md-column h-100">
+        <div class="d-flex align-items-center py-0 py-md-2 mt-2 mt-md-0 ps-2">
+            <h3 class=" d-flex gap-2 text-primary">
+                <i class="bi bi-book-fill"></i><span class="d-none d-md-inline">Unellez</span>
+            </h3>
+        </div>
+        <hr class="mt-0 mx-3">
+        <div class="d-flex flex-row flex-md-column flex-grow-1 gap-2 justify-content-center justify-content-md-start">
+            <c-aside-item active text="Mi perfil"><i class="bi bi-person"></i></c-aside-item>
+            <c-aside-item text="Tutorias"><i class="bi bi-file-earmark-text"></i></c-aside-item>
+            <c-aside-item text="Mensajes"><i class="bi bi-chat-dots"></i></c-aside-item>
+            <c-aside-item text="Horario"><i class="bi bi-calendar"></i></c-aside-item>
+        </div>
+        <hr class=" mx-3">
+        <div class="d-flex flex-row flex-md-column">
+            <c-aside-item text="Cerrar sesión"><i class="bi bi-box-arrow-left"></i></c-aside-item>
+        </div>
+    </div>
+    </c-card_basic>
 </aside>

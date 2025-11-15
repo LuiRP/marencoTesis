@@ -1,0 +1,6 @@
+<a href="{{ url }}"
+   class="btn p-2 {% if active is True %}btn-primary{% else %}btn-light bg-body{% endif %}">
+    <div class="m-0 p-0 d-flex gap-2">
+        {{ slot }}<span class="d-none d-md-inline">{{ text }}</span>
+    </div>
+</a>

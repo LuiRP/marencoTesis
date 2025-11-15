@@ -6,19 +6,12 @@ body {
 .layout {
     min-height: inherit;
     display: grid;
-    grid-gap: 0.5rem;
-    grid-template-columns: 15% 1fr;
-    grid-template-rows: 15% 1fr;
-    grid-template-areas: "sidebar navbar" "sidebar content";
+    grid-gap: 1rem;
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "sidebar content";
 }
 
-.layout-no-auth {
-    min-height: inherit;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-    grid-template-areas: "content";
-}
 
 #aside {
     grid-area: sidebar;
@@ -35,7 +28,7 @@ body {
 @media screen and (max-width: 767px) {
     .layout {
         grid-template-columns: auto;
-        grid-template-rows: 10% 10% auto;
-        grid-template-areas: "sidebar" "navbar" "content";
+        grid-template-rows: 62px 1fr;
+        grid-template-areas: "sidebar" "content";
     }
 }
