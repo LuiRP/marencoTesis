@@ -11997,15 +11997,4 @@ textarea.form-control-lg {
   .d-print-none {
     display: none !important;
   }
-}
-.list-group-item.active,
-.list-group-item-action.active {
-  background-color: #FF7518;
-  background-image: var(--bs-gradient);
-}
-.list-group-item.active:hover, .list-group-item.active:focus,
-.list-group-item-action.active:hover,
-.list-group-item-action.active:focus {
-  background-color: rgb(253.5, 102.0584415584, 0);
-  background-image: var(--bs-gradient);
 }/*# sourceMappingURL=custom.css.map */
