@@ -1,0 +1,7 @@
+{% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+        <c-toasts.toast class_color="bg-danger text-bg-danger">
+        {{ error }}
+        </c-toasts.toast>
+    {% endfor %}
+{% endif %}

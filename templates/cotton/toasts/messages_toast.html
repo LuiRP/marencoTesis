@@ -1,0 +1,7 @@
+{% if messages %}
+    {% for message in messages %}
+        <c-toasts.toast class_color="bg-{{ message.tags }} text-bg-danger">
+        {{ message }}
+        </c-toasts.toast>
+    {% endfor %}
+{% endif %}

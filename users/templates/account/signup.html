@@ -1,0 +1,21 @@
+{% extends "layouts/base.html" %}
+{% block title %}
+    Crear Cuenta
+{% endblock title %}
+{% block content %}
+    <c-form.form>
+    <div class="d-flex gap-2 ">
+        <div class="flex-grow-1">
+            <c-form.form-control :field="form.first_name" />
+        </div>
+        <div class="flex-grow-1">
+            <c-form.form-control :field="form.last_name" />
+        </div>
+    </div>
+    <c-form.form-control :field="form.email" />
+    <c-form.form-control :field="form.password1" />
+    <c-form.form-control :field="form.password2" />
+    <c-form.checkbox :field="form.is_tutor" />
+    <c-form.form-button button_action="confirm" />
+    </c-form.form>
+{% endblock content %}

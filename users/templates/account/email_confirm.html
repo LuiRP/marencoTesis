@@ -1,0 +1,19 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% block title %}
+    Confirmar Dirección de Correo
+{% endblock title %}
+{% block content %}
+    {% if confirmation %}
+        {% if can_confirm %}
+            <p class="form-text">Confirmar dirección de correo electrónico</p>
+            <c-form url="{% url 'account_confirm_email' confirmation.key %}">
+            <c-form-button button_action="confirm" />
+            </c-form>
+        {% else %}
+            <p class="form-text">Esta dirección de correo ya está confirmada por otra cuenta.</p>
+        {% endif %}
+    {% else %}
+        <p class="form-text">Este enlace ha caducado o no es válido. Por favor, envíe una nueva solicitud de confirmación.</p>
+    {% endif %}
+{% endblock content %}

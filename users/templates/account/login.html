@@ -1,0 +1,11 @@
+{% extends "layouts/base.html" %}
+{% block title %}
+    Inicio de Sesión
+{% endblock title %}
+{% block content %}
+    <c-form.form>
+    <c-form.form-control :field="form.login" />
+    <c-form.form-control :field="form.password" />
+    <c-form.form-button button_action="confirm" />
+    </c-form.form>
+{% endblock content %}

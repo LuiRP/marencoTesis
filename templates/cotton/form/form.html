@@ -1,0 +1,7 @@
+<form action=""
+      method="post"
+      class="form needs-validation d-flex flex-column h-100"
+      novalidate>
+  {% csrf_token %}
+  {{ slot }}
+</form>
