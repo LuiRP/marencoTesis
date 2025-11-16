@@ -6,7 +6,7 @@ body {
 .layout {
     min-height: inherit;
     display: grid;
-    grid-gap: 1rem;
+    grid-gap: 1.5rem;
     grid-template-columns: 200px 1fr;
     grid-template-rows: 1fr;
     grid-template-areas: "sidebar content";
