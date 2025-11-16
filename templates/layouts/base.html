@@ -16,13 +16,13 @@
         <link rel="stylesheet" href="{% static "styles.css" %}">
     </head>
     <body class="min-vh-100 bg-primary-subtle">
-        <div class="layout p-3">
+        <div class="layout p-md-4 p-2 gap-md-4 gap-2">
             <c-aside />
             <main id="main">
-                <c-card_basic>
-                {% block content %}
-                {% endblock content %}
-                </c-card_basic>
+                <div class="h-100">
+                    {% block content %}
+                    {% endblock content %}
+                </div>
             </main>
         </div>
         <c-toasts.toast_container />

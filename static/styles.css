@@ -25,6 +25,7 @@ body {
     grid-area: content;
 }
 
+
 @media screen and (max-width: 767px) {
     .layout {
         grid-template-columns: auto;

@@ -1,0 +1,58 @@
+{% extends "layouts/base.html" %}
+{% block title %}
+    Inicio de Sesión
+{% endblock title %}
+{% block content %}
+    <div class="h-100 d-flex flex-column gap-md-4 gap-2">
+        <c-card-basic class="h-75 d-flex flex-column gap-2 text-center">
+        <div>
+            <div>
+                <img src="{{ request.user.profile_picture.url }}"
+                     alt=""
+                     width="120px"
+                     height="120px"
+                     class="rounded-circle border border-2 border-primary-subtle p-1">
+            </div>
+            <h4 class="primary mb-0">{{ request.user.first_name }} {{ request.user.last_name }}</h4>
+            <div class="fs-6 fw-lighter">{{ request.user.email }}</div>
+            <div>
+                <span class="badge rounded-pill text-white bg-primary">
+                    {% if request.user.is_tutor %}
+                        Tutor
+                    {% else %}
+                        Estudiante
+                    {% endif %}
+                </span>
+            </div>
+            <div class="text-primary">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-half"></i>
+                <i class="bi bi-star"></i>
+            </div>
+            <div class="fs-6 fw-lighter">4.5 Estrellas</div>
+        </div>
+        <div class="flex-grow-1 bg-primary-subtle  rounded-2 text-start p-2">
+            <p>
+                {% if request.user.description %}
+                    {{ request.user.description }}
+                {% else %}
+                    Este usuario no ha establecido una descripcion
+                {% endif %}
+            </p>
+        </div>
+        <div>
+            <button type="button" class="btn btn-outline-primary">
+                <i class="bi bi-chat-dots"></i> Contactar
+            </button>
+            <button type="button" class="btn btn-outline-secondary">
+                <i class="bi bi-calendar"></i> Ver horario
+            </button>
+            <button type="button" class="btn btn-outline-secondary">
+                <i class="bi bi-bookmark"></i> Ver Reseñas
+            </button>
+        </div>
+        </c-card-basic>
+    </div>
+{% endblock content %}
