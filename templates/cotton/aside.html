@@ -8,7 +8,7 @@
         </div>
         <hr class="mt-0 mx-3 d-none d-md-block">
         <div class="d-flex flex-row flex-md-column flex-grow-1 gap-2 justify-content-start justify-content-md-start">
-            <c-aside-item text="Mi perfil" url="{% url "profile" %}"><i class="bi bi-person"></i></c-aside-item>
+            <c-aside-item text="Mi perfil" url="{% url "profile" request.user.pk %}"><i class="bi bi-person"></i></c-aside-item>
             <c-aside-item text="Tutorias"><i class="bi bi-file-earmark-text"></i></c-aside-item>
             <c-aside-item text="Mensajes"><i class="bi bi-chat-dots"></i></c-aside-item>
             <c-aside-item text="Horario"><i class="bi bi-calendar"></i></c-aside-item>
@@ -17,7 +17,7 @@
         <div class="d-flex flex-row flex-md-column gap-2 justify-content-center justify-content-md-start">
             <c-aside-item text="Notificaciones"><i class="bi bi-bell"></i></c-aside-item>
             <c-aside-item text="Opciones"><i class="bi bi-gear"></i></c-aside-item>
-            <c-aside-item text="Cerrar sesión"><i class="bi bi-box-arrow-left"></i></c-aside-item>
+            <c-aside-item text="Cerrar sesión" url="{% url "account_logout" %}"><i class="bi bi-box-arrow-left"></i></c-aside-item>
         </div>
     </div>
     </c-card_basic>

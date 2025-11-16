@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 from .managers import CustomUserManager
@@ -30,3 +31,17 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+class Review(models.Model):
+    author = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="authored_reviews"
+    )
+    reviewed = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="received_reviews"
+    )
+    body = models.TextField("Cuerpo de la reseña")
+    rating = models.IntegerField(
+        default=0, validators=[MinValueValidator(0), MaxValueValidator(5)]
+    )
+    created_at = models.DateTimeField(auto_now_add=True)

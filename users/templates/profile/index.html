@@ -7,17 +7,17 @@
         <c-card-basic class="h-75 d-flex flex-column gap-2 text-center">
         <div>
             <div>
-                <img src="{{ request.user.profile_picture.url }}"
+                <img src="{{ user.profile_picture.url }}"
                      alt=""
                      width="120px"
                      height="120px"
                      class="rounded-circle border border-2 border-primary-subtle p-1">
             </div>
-            <h4 class="primary mb-0">{{ request.user.first_name }} {{ request.user.last_name }}</h4>
-            <div class="fs-6 fw-lighter">{{ request.user.email }}</div>
+            <h4 class="primary mb-0">{{ user.first_name }} {{ user.last_name }}</h4>
+            <div class="fs-6 fw-lighter">{{ user.email }}</div>
             <div>
                 <span class="badge rounded-pill text-white bg-primary">
-                    {% if request.user.is_tutor %}
+                    {% if user.is_tutor %}
                         Tutor
                     {% else %}
                         Estudiante
@@ -25,13 +25,23 @@
                 </span>
             </div>
             <div class="text-primary">
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-fill"></i>
-                <i class="bi bi-star-half"></i>
-                <i class="bi bi-star"></i>
+                {% for star in stars %}
+                    {% if star == 1 %}
+                        <i class="bi bi-star-fill"></i>
+                    {% elif star == 0.5 %}
+                        <i class="bi bi-star-half"></i>
+                    {% else %}
+                        <i class="bi bi-star"></i>
+                    {% endif %}
+                {% endfor %}
             </div>
-            <div class="fs-6 fw-lighter">4.5 Estrellas</div>
+            <div class="fs-6 fw-lighter">
+                {% if there_is_ratings %}
+                    {{ avg_rating }} Estrellas
+                {% else %}
+                    Este usuario no ha recibidio reseñas
+                {% endif %}
+            </div>
         </div>
         <div class="flex-grow-1 bg-primary-subtle  rounded-2 text-start p-2">
             <p>
@@ -43,15 +53,17 @@
             </p>
         </div>
         <div>
-            <button type="button" class="btn btn-outline-primary">
-                <i class="bi bi-chat-dots"></i> Contactar
-            </button>
-            <button type="button" class="btn btn-outline-secondary">
-                <i class="bi bi-calendar"></i> Ver horario
-            </button>
-            <button type="button" class="btn btn-outline-secondary">
+            {% if not user == request.user %}
+                <a class="btn btn-outline-primary">
+                    <i class="bi bi-chat-dots"></i> Contactar
+                </a>
+                <a class="btn btn-outline-secondary">
+                    <i class="bi bi-calendar"></i> Ver horario
+                </a>
+            {% endif %}
+            <a class="btn btn-outline-secondary" href="{% url "reviews" user.pk %}">
                 <i class="bi bi-bookmark"></i> Ver Reseñas
-            </button>
+            </a>
         </div>
         </c-card-basic>
     </div>

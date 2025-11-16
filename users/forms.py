@@ -1,4 +1,5 @@
 from django import forms
+from .models import Review
 
 
 class ExpandedSignUpForm(forms.Form):
@@ -29,3 +30,11 @@ class ExpandedSignUpForm(forms.Form):
         user.last_name = self.cleaned_data["last_name"]
         user.is_tutor = self.cleaned_data["is_tutor"]
         user.save()
+
+
+class ReviewForm(forms.ModelForm):
+    rating = forms.IntegerField(label="Calificación", max_value=5, min_value=0)
+
+    class Meta:
+        model = Review
+        fields = ["body", "rating"]

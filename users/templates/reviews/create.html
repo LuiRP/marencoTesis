@@ -1,0 +1,11 @@
+{% extends "layouts/base.html" %}
+{% block title %}
+    Crear Reseña
+{% endblock title %}
+{% block content %}
+    <c-form.form>
+    <c-form.form-control :field="form.body" />
+    <c-form.form-control :field="form.rating" min="0" />
+    <c-form.form-button button_action="add" />
+    </c-form.form>
+{% endblock content %}
