@@ -1,0 +1,12 @@
+{% load widget_tweaks %}
+<div>
+    {% if field.errors %}
+        {% render_field field class="form-select is-invalid" %}
+        <ul id="errors-{{ field.auto_id }}" class="list-unstyled text-danger">
+            {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+    {% else %}
+        {% render_field field class="form-select" %}
+    {% endif %}
+    <div class="form-text mt-2">{{ field.help_text }}</div>
+</div>

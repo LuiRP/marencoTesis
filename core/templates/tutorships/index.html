@@ -1,0 +1,96 @@
+{% extends "layouts/base.html" %}
+{% block title %}
+    Tutorias
+{% endblock title %}
+{% block content %}
+    <div class="h-100 d-flex flex-column gap-md-4 gap-2">
+        <c-card-basic class="h-auto d-flex flex-column gap-2">
+        <div class="d-flex flex-row justify-content-between align-items-center">
+            <div class="d-flex m-1">
+                <form action=""
+                      class="d-flex gap-2 "
+                      hx-get="{% url 'tutorships' %}"
+                      hx-push-url="true"
+                      hx-trigger="keyup changed delay:500ms, search"
+                      hx-include="[name='search']"
+                      hx-target="#content"
+                      hx-select-oob="#content">
+                    <input type="search"
+                           name="search"
+                           class="form-control"
+                           placeholder="Buscar..."
+                           aria-label="Buscar">
+                    {% if request.user.is_tutor %}
+                        <div class="form-check form-switch w-100 align-content-center">
+                            <input class="form-check-input"
+                                   name="my_tutorships"
+                                   type="checkbox"
+                                   role="switch"
+                                   hx-get="{% url 'tutorships' %}"
+                                   hx-push-url="true"
+                                   hx-trigger="change"
+                                   hx-include="[name='search']"
+                                   hx-target="#content"
+                                   hx-select-oob="#content"
+                                   id="switchCheckDefault">
+                            <label class="form-check-label" for="switchCheckDefault">Propias</label>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+            {% if request.user.is_tutor %}
+                <a href="{% url "tutorship_create" %}"
+                   class="btn btn-primary text-white">Crear</a>
+            {% endif %}
+        </div>
+        </c-card-basic>
+        <div id="content" class="d-flex flex-column gap-md-4 gap-2">
+            {% for tutorship in page_obj %}
+                <c-card-basic class="h-auto d-flex flex-column gap-2">
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex gap-2">
+                        <img src="{{ tutorship.tutor.profile_picture.url }}"
+                             alt=""
+                             width="50px"
+                             height="50px">
+                        <div class="d-flex flex-column ">
+                            <div>{{ tutorship.tutor.first_name }} {{ tutorship.tutor.last_name }}</div>
+                            <div>{{ tutorship.tutor.email }}</div>
+                        </div>
+                    </div>
+                    {% if tutorship.tutor == request.user %}
+                        <div class="dropdown">
+                            <button class="btn"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{% url "tutorship_update" tutorship.pk %}"
+                                       class="dropdown-item">Editar tutoria</a>
+                                </li>
+                                <li>
+                                    <a href="{% url "tutorship_delete" tutorship.pk %}"
+                                       class="dropdown-item">Eliminar tutoria</a>
+                                </li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+                <div>
+                    <div class="lead">{{ tutorship.get_name_display }}</div>
+                    <p class="mb-0">{{ tutorship.description }}</p>
+                </div>
+                <div>
+                    <a type="button"
+                       class="btn btn-primary text-white"
+                       href="{% url "profile" tutorship.tutor.pk %}">Detalles del tutor</a>
+                </div>
+                </c-card-basic>
+            {% endfor %}
+        </div>
+        <c-pagination />
+    </div>
+{% endblock content %}

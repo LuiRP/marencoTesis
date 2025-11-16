@@ -26,6 +26,16 @@ body {
 }
 
 
+@media screen and (min-width: 767px) {
+    .aside {
+        position: fixed;
+        width: 200px;
+        max-height: 93vh;
+    }
+
+}
+
+
 @media screen and (max-width: 767px) {
     .layout {
         grid-template-columns: auto;

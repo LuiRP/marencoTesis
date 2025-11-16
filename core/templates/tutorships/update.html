@@ -1,0 +1,11 @@
+{% extends "layouts/base.html" %}
+{% block title %}
+    Editar Tutoria
+{% endblock title %}
+{% block content %}
+    <c-form.form>
+    <c-form.form-select :field="form.name" />
+    <c-form.form-control :field="form.description" />
+    <c-form.form-button button_action="update" />
+    </c-form.form>
+{% endblock content %}

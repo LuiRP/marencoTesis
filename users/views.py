@@ -110,6 +110,7 @@ def review_delete(request, user_id, review_id):
         raise PermissionDenied()
     if request.method == "POST":
         review.delete()
+        messages.success(request, "Reseña eliminada exitosamente.")
         redirect_url = reverse("reviews", kwargs={"user_id": reviewed_id})
         return HttpResponseRedirect(redirect_url)
     return render(request, "reviews/delete.html")

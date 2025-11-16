@@ -1,6 +1,6 @@
 <aside id="aside">
-    <c-card_basic class="h-100">
-    <div class="d-flex flex-row flex-md-column h-100">
+    <c-card_basic class="h-100 aside">
+    <div class="d-flex flex-row flex-md-column h-100 overflow-hidden">
         <div class="d-flex align-items-center py-0 py-md-2 mt-2 mt-md-0 ps-2 d-none d-md-flex">
             <h3 class=" d-flex gap-2 text-primary">
                 <i class="bi bi-book-fill"></i><span class="d-none d-md-inline">Unellez</span>
@@ -9,7 +9,7 @@
         <hr class="mt-0 mx-3 d-none d-md-block">
         <div class="d-flex flex-row flex-md-column flex-grow-1 gap-2 justify-content-start justify-content-md-start">
             <c-aside-item text="Mi perfil" url="{% url "profile" request.user.pk %}"><i class="bi bi-person"></i></c-aside-item>
-            <c-aside-item text="Tutorias"><i class="bi bi-file-earmark-text"></i></c-aside-item>
+            <c-aside-item text="Tutorias" url="{% url "tutorships" %}"><i class="bi bi-file-earmark-text"></i></c-aside-item>
             <c-aside-item text="Mensajes"><i class="bi bi-chat-dots"></i></c-aside-item>
             <c-aside-item text="Horario"><i class="bi bi-calendar"></i></c-aside-item>
         </div>
