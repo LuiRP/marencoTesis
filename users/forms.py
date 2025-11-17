@@ -33,7 +33,17 @@ class ExpandedSignUpForm(forms.Form):
 
 
 class ReviewForm(forms.ModelForm):
-    rating = forms.IntegerField(label="Calificación", max_value=5, min_value=0)
+    body = forms.CharField(
+        label="Cuerpo de la reseña",
+        widget=forms.Textarea(attrs={"placeholder": "Cuerpo de la reseña"}),
+    )
+
+    rating = forms.IntegerField(
+        label="Calificación",
+        max_value=5,
+        min_value=0,
+        widget=forms.NumberInput(attrs={"placeholder": "Calificación"}),
+    )
 
     class Meta:
         model = Review
