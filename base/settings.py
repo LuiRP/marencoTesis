@@ -38,11 +38,13 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "daphne",
     "django.contrib.staticfiles",
 ]
 INSTALLED_APPS += [
     "users",
     "core",
+    "notifications",
     "django_cotton",
     "allauth",
     "allauth.account",
@@ -93,7 +95,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "base.wsgi.application"
 AUTH_USER_MODEL = "users.CustomUser"
-
+ASGI_APPLICATION = "base.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases

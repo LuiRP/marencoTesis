@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404
 from django.core.exceptions import PermissionDenied
 from .models import CustomUser, Review
 from .forms import ReviewForm
+from notifications import models as NotificationModels
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
@@ -75,6 +76,13 @@ def review_create(request, user_id):
             r = Review(body=body, author=author, rating=rating, reviewed=reviewed)
             r.save()
             messages.success(request, "Reseña creada exitosamente.")
+            notifification = NotificationModels.Notification(
+                type="reseña",
+                body="ha escrito una reseña",
+                action_user=request.user,
+                receiver=reviewed,
+            )
+            notifification.save()
             redirect_url = reverse("reviews", kwargs={"user_id": reviewed.pk})
             return HttpResponseRedirect(redirect_url)
     else:
