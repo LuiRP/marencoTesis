@@ -27,6 +27,7 @@ urlpatterns = [
     path("", include("core.urls")),
     path("", include("users.urls")),
     path("", include("notifications.urls")),
+    path("", include("chat.urls")),
 ]
 urlpatterns += staticfiles_urlpatterns()
 

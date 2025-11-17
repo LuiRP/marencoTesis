@@ -13,7 +13,7 @@ def notifications(request):
     notifications = Notification.objects.filter(receiver=request.user).order_by(
         "-created_at"
     )
-    paginator = Paginator(notifications, 8)
+    paginator = Paginator(notifications, 5)
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -74,12 +74,9 @@ def create_toast_html(notification):
     """
 
 
-# Sync function for cache cleanup
 def cleanup_old_notifications_sync(cache_key, sent_ids, current_notifications):
-    # Only keep notifications that haven't been sent yet
     remaining = [n for n in current_notifications if n["id"] not in sent_ids]
     cache.set(cache_key, remaining, timeout=300)
 
 
-# Async wrapper
 cleanup_old_notifications = sync_to_async(cleanup_old_notifications_sync)

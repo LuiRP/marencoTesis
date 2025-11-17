@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function startSSE() {
-    // Close existing connection if any
     if (eventSource) {
         eventSource.close();
     }
@@ -24,8 +23,12 @@ function startSSE() {
     eventSource.onmessage = function (event) {
         try {
             const data = JSON.parse(event.data);
+            refreshChatContainer();
+            refreshInboxContent();
+
             if (data.html) {
                 addToastFromHTML(data.html);
+
             }
         } catch (e) {
             console.error('Error parsing SSE data:', e);
@@ -106,3 +109,70 @@ function addToastFromHTML(html) {
 window.addEventListener('beforeunload', function () {
     stopSSE();
 });
+
+function scrollToBottom() {
+    const messagesContainer = document.getElementById('messages-container');
+    if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    scrollToBottom();
+});
+
+document.body.addEventListener('htmx:afterSwap', function (evt) {
+    if (evt.detail.target.id === 'messages-container') {
+        scrollToBottom();
+    }
+});
+
+function refreshChatContainer() {
+    fetch(window.location.href)
+        .then(response => response.text())
+        .then(html => {
+            // Parse the HTML and extract only the messages-container
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newMessagesContainer = doc.getElementById('messages-container');
+
+            if (newMessagesContainer) {
+                const currentContainer = document.getElementById('messages-container');
+                currentContainer.innerHTML = newMessagesContainer.innerHTML;
+                scrollToBottom();
+            }
+        })
+        .catch(error => console.error('Error refreshing chat:', error));
+}
+
+function mainContainer() {
+    fetch(window.location.href)
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newMessagesContainer = doc.getElementById('messages-container');
+
+            if (newMessagesContainer) {
+                const currentContainer = document.getElementById('messages-container');
+                currentContainer.innerHTML = newMessagesContainer.innerHTML;
+            }
+        })
+        .catch(error => console.error('Error refreshing chat:', error));
+}
+
+function refreshInboxContent() {
+    fetch(window.location.href)
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newInboxContent = doc.getElementById('inboxContent');
+
+            if (newInboxContent) {
+                const currentInboxContent = document.getElementById('inboxContent');
+                currentInboxContent.innerHTML = newInboxContent.innerHTML;
+            }
+        })
+        .catch(error => console.error('Error refreshing inbox:', error));
+}

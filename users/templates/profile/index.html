@@ -4,7 +4,7 @@
 {% endblock title %}
 {% block content %}
     <div class="h-100 d-flex flex-column gap-md-4 gap-2">
-        <c-card-basic class="h-75 d-flex flex-column gap-2 text-center">
+        <c-card_basic class="h-75 d-flex flex-column gap-2 text-center">
         <div>
             <div>
                 <img src="{{ user.profile_picture.url }}"
@@ -54,7 +54,8 @@
         </div>
         <div>
             {% if not user == request.user %}
-                <a class="btn btn-outline-primary">
+                <a class="btn btn-outline-primary"
+                   href="{% url "get_or_create_chat_thread" user.pk %}">
                     <i class="bi bi-chat-dots"></i> Contactar
                 </a>
                 <a class="btn btn-outline-secondary">
@@ -65,6 +66,6 @@
                 <i class="bi bi-bookmark"></i> Ver Reseñas
             </a>
         </div>
-        </c-card-basic>
+        </c-card_basic>
     </div>
 {% endblock content %}

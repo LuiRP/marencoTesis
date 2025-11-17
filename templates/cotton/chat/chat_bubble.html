@@ -1,0 +1,14 @@
+<div class="d-flex gap-2 {{ class }}">
+    <a href="{% url "profile" message.sender.pk %}">
+        <img src="{{ user.profile_picture.url }}"
+             alt=""
+             width="50px"
+             height="50px"
+             class="rounded-2">
+    </a>
+    <div class="alert alert-primary px-2 py-0 m-0 align-content-center h-auto"
+         role="alert">
+        <div>{{ message.content }}</div>
+    </div>
+    <div class="my-auto form-text fw-lighter">{{ message.timestamp|timesince }}</div>
+</div>

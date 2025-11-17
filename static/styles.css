@@ -25,6 +25,11 @@ body {
     grid-area: content;
 }
 
+.chat {
+    min-height: 78vh;
+    max-height: 78vh;
+}
+
 
 @media screen and (min-width: 767px) {
     .aside {

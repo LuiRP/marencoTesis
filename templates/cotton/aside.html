@@ -10,7 +10,7 @@
         <div class="d-flex flex-row flex-md-column flex-grow-1 gap-2 justify-content-start justify-content-md-start">
             <c-aside-item text="Mi perfil" url="{% url "profile" request.user.pk %}"><i class="bi bi-person"></i></c-aside-item>
             <c-aside-item text="Tutorias" url="{% url "tutorships" %}"><i class="bi bi-file-earmark-text"></i></c-aside-item>
-            <c-aside-item text="Mensajes"><i class="bi bi-chat-dots"></i></c-aside-item>
+            <c-aside-item text="Mensajes" url="{% url "inbox" %}"><i class="bi bi-chat-dots"></i></c-aside-item>
             <c-aside-item text="Horario"><i class="bi bi-calendar"></i></c-aside-item>
         </div>
         <hr class=" mx-3">

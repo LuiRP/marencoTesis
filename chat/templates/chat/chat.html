@@ -1,0 +1,56 @@
+{% extends "layouts/base.html" %}
+{% block title %}
+    Contactos
+{% endblock title %}
+{% block content %}
+    <div class="h-100 d-flex flex-column gap-md-4 gap-2">
+        <c-card_basic class="h-auto d-flex flex-column gap-2 justify-content-between">
+        <div class="d-flex flex-row justify-content-between align-items-center">
+            <div class="d-flex w-100 ">
+                <div class="d-flex flex-grow-1 ">
+                    <a class="btn text-primary" href="{% url "inbox" %}"><i class="bi bi-caret-left"></i></a>
+                    <h3 class="lead m-2">
+                        {{ other_user.first_name }} {{ other_user.last_name }} <span class="text-primary">({{ other_user.email }})</span>
+                    </h3>
+                </div>
+                <button class="btn btn-outline-secondary">
+                    <i class="bi bi-camera-video"></i>
+                </button>
+            </div>
+        </div>
+        </c-card_basic>
+        <c-card_basic class="chat d-flex flex-column">
+        <div id="messages-container"
+             class="d-flex gap-2 flex-grow-1 overflow-y-scroll m-2">
+            <div class="d-flex gap-2 align-items-start flex-column w-100">
+                {% for message in chat_messages %}
+                    {% if message.sender == request.user %}
+                        <c-chat.chat_bubble :{{ other_user }}="user" :message="message" class="flex-row-reverse justify-content-start w-100" />
+                    {% else %}
+                        <c-chat.chat_bubble :{{ request.user }}="user" :message="message" />
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <div>
+            <form hx-post="{% url "get_or_create_chat_thread" other_user.pk %}"
+                  hx-trigger="submit"
+                  hx-on::after-request="if (event.detail.successful) { htmx.trigger('body', 'messageSent') };this.reset(); "
+                  name="content"
+                  hx-target="#messages-container"
+                  hx-select-oob="#messages-container"
+                  class="d-flex gap-2">
+                {% csrf_token %}
+                <input type="text"
+                       name="content"
+                       class="form-control flex-grow-1"
+                       placeholder="Escribir mensaje..."
+                       required>
+                <button class="btn btn-outline-primary" type="submit">
+                    <i class="bi bi-caret-right"></i>
+                </button>
+            </form>
+        </div>
+        </c-card_basic>
+    </div>
+{% endblock content %}

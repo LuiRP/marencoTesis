@@ -1,0 +1,66 @@
+{% extends "layouts/base.html" %}
+{% block title %}
+    Contactos
+{% endblock title %}
+{% block content %}
+    <div class="h-100 d-flex flex-column gap-md-4 gap-2">
+        <c-card_basic class="h-auto d-flex flex-column gap-2">
+        <div class="d-flex flex-row justify-content-between align-items-center">
+            <div class="d-flex m-1">
+                <form action=""
+                      class="d-flex gap-2 "
+                      hx-get="{% url 'inbox' %}"
+                      hx-push-url="true"
+                      hx-trigger="keyup changed delay:500ms, search"
+                      hx-include="[name='search']"
+                      hx-target="#inboxContent"
+                      hx-select-oob="#inboxContent">
+                    <input type="search"
+                           name="search"
+                           class="form-control"
+                           placeholder="Buscar..."
+                           aria-label="Buscar">
+                </form>
+            </div>
+        </div>
+        </c-card_basic>
+        <div id="inboxContent" class="d-flex flex-column gap-2">
+            {% for conversation in page_obj %}
+                <a href="{% url "get_or_create_chat_thread" conversation.other_user.pk %}"
+                   class="link-underline link-underline-opacity-0">
+                    <c-card_basic class="h-auto d-flex flex-column gap-2">
+                    <div class="d-flex gap-2 justify-content-between align-items-center">
+                        <div class="d-flex gap-2">
+                            <img src="{{ conversation.other_user.profile_picture.url }}"
+                                 alt=""
+                                 width="50px"
+                                 height="50px">
+                            <div class="d-flex flex-column">
+                                <div class="d-flex gap-2">
+                                    <div class="lead">{{ conversation.other_user.first_name }} {{ conversation.other_user.last_name }}</div>
+                                    <div class="lead">({{ conversation.other_user.email }})</div>
+                                </div>
+                                {% if conversation.last_message_time %}
+                                    <div class="fw-lighter">{{ conversation.last_message_time|timesince }}</div>
+                                {% else %}
+                                    <div class="fw-lighter"></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if conversation.unread_count > 0 %}
+                            <div>
+                                <span class="badge text-bg-primary me-2 text-white">{{ conversation.unread_count }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    </c-card_basic>
+                </a>
+            {% empty %}
+                <c-card_basic class="h-auto d-flex flex-column gap-2">
+                <div>No hay conversaciones.</div>
+                </c-card_basic>
+            {% endfor %}
+        </div>
+        <c-pagination />
+    </div>
+{% endblock content %}

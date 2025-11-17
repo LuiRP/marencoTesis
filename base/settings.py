@@ -45,6 +45,7 @@ INSTALLED_APPS += [
     "users",
     "core",
     "notifications",
+    "chat",
     "django_cotton",
     "allauth",
     "allauth.account",

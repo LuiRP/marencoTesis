@@ -4,7 +4,7 @@
 {% endblock title %}
 {% block content %}
     <div class="h-100 d-flex flex-column gap-md-4 gap-2">
-        <c-card-basic class="h-auto d-flex flex-column gap-2">
+        <c-card_basic class="h-auto d-flex flex-column gap-2">
         <div class="d-flex flex-row justify-content-between align-items-center">
             <div class="d-flex m-1">
                 <form action=""
@@ -43,10 +43,10 @@
                    class="btn btn-primary text-white">Crear</a>
             {% endif %}
         </div>
-        </c-card-basic>
-        <div id="content" class="d-flex flex-column gap-md-4 gap-2">
+        </c-card_basic>
+        <div id="content" class="d-flex flex-column gap-2">
             {% for tutorship in page_obj %}
-                <c-card-basic class="h-auto d-flex flex-column gap-2">
+                <c-card_basic class="h-auto d-flex flex-column gap-2">
                 <div class="d-flex justify-content-between">
                     <div class="d-flex gap-2">
                         <img src="{{ tutorship.tutor.profile_picture.url }}"
@@ -88,7 +88,7 @@
                        class="btn btn-primary text-white"
                        href="{% url "profile" tutorship.tutor.pk %}">Detalles del tutor</a>
                 </div>
-                </c-card-basic>
+                </c-card_basic>
             {% endfor %}
         </div>
         <c-pagination />
