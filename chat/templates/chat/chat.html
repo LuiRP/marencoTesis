@@ -25,9 +25,9 @@
             <div class="d-flex gap-2 align-items-start flex-column w-100">
                 {% for message in chat_messages %}
                     {% if message.sender == request.user %}
-                        <c-chat.chat_bubble :{{ other_user }}="user" :message="message" class="flex-row-reverse justify-content-start w-100" />
+                        <c-chat.chat_bubble :user="request.user" :message="message" class="flex-row-reverse justify-content-start w-100" />
                     {% else %}
-                        <c-chat.chat_bubble :{{ request.user }}="user" :message="message" />
+                        <c-chat.chat_bubble :user="other_user" :message="message" />
                     {% endif %}
                 {% endfor %}
             </div>

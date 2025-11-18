@@ -164,6 +164,7 @@ ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_SIGNUP_FORM_CLASS = "users.forms.ExpandedSignUpForm"
 
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/account"
+LOGIN_REDIRECT_URL = "/tutorships"
 
 MESSAGE_TAGS = {
     messages.DEBUG: "debug",
