@@ -8,16 +8,23 @@
         </div>
         <hr class="mt-0 mx-3 d-none d-md-block">
         <div class="d-flex flex-row flex-md-column flex-grow-1 gap-2 justify-content-start justify-content-md-start">
-            <c-aside-item text="Mi perfil" url="{% url "profile" request.user.pk %}"><i class="bi bi-person"></i></c-aside-item>
-            <c-aside-item text="Tutorias" url="{% url "tutorships" %}"><i class="bi bi-file-earmark-text"></i></c-aside-item>
-            <c-aside-item text="Mensajes" url="{% url "inbox" %}"><i class="bi bi-chat-dots"></i></c-aside-item>
-            <c-aside-item text="Horario"><i class="bi bi-calendar"></i></c-aside-item>
+            {% if request.user.is_authenticated %}
+                <c-aside-item text="Mi perfil" url="{% url "profile" request.user.pk %}"><i class="bi bi-person"></i></c-aside-item>
+                <c-aside-item text="Tutorias" url="{% url "tutorships" %}"><i class="bi bi-file-earmark-text"></i></c-aside-item>
+                <c-aside-item text="Mensajes" url="{% url "inbox" %}"><i class="bi bi-chat-dots"></i></c-aside-item>
+                <c-aside-item text="Horario"><i class="bi bi-calendar"></i></c-aside-item>
+            {% else %}
+                <c-aside-item text="Inicio de Sesión" url="{% url "account_login" %}"><i class="bi bi-file-earmark-text"></i></c-aside-item>
+                <c-aside-item text="Crear cuenta" url="{% url "account_signup" %}"><i class="bi bi-chat-dots"></i></c-aside-item>
+            {% endif %}
         </div>
         <hr class=" mx-3">
         <div class="d-flex flex-row flex-md-column gap-2 justify-content-center justify-content-md-start">
-            <c-aside-item text="Notificaciones" url="{% url "notifications" %}"><i class="bi bi-bell"></i></c-aside-item>
-            <c-aside-item text="Opciones"><i class="bi bi-gear"></i></c-aside-item>
-            <c-aside-item text="Cerrar sesión" url="{% url "account_logout" %}"><i class="bi bi-box-arrow-left"></i></c-aside-item>
+            {% if request.user.is_authenticated %}
+                <c-aside-item text="Notificaciones" url="{% url "notifications" %}"><i class="bi bi-bell"></i></c-aside-item>
+                <c-aside-item text="Opciones" url="{% url "options" %}"><i class="bi bi-gear"></i></c-aside-item>
+                <c-aside-item text="Cerrar sesión" url="{% url "account_logout" %}"><i class="bi bi-box-arrow-left"></i></c-aside-item>
+            {% endif %}
         </div>
     </div>
     </c-card_basic>

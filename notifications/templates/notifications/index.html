@@ -4,7 +4,28 @@
 {% endblock title %}
 {% block content %}
     <div class="h-100 d-flex flex-column gap-md-4 gap-2">
-        <div id="content" class="d-flex flex-column gap-2">
+        <c-card_basic class="h-auto d-flex flex-column gap-2">
+        <div class="d-flex flex-row justify-content-between align-items-center">
+            <div class="d-flex m-1">
+                <form action=""
+                      class="d-flex gap-2 "
+                      hx-get="{% url 'notifications' %}"
+                      hx-push-url="true"
+                      hx-trigger="change, filter"
+                      hx-include="[name='search']"
+                      hx-target="#content"
+                      hx-select-oob="#content">
+                    <select class="form-select" aria-label="Tipo de notificación" name="filter">
+                        <option selected disabled>Tipo de notificación</option>
+                        <option value="reseña">Reseña</option>
+                        <option value="reserva">Reserva</option>
+                        <option value="mensaje">Mensaje</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+        </c-card_basic>
+        <div id="content" class="d-flex h-100 flex-column gap-2">
             {% for notification in page_obj %}
                 <a href="{% url "profile" notification.action_user.pk %}"
                    class="link-underline link-underline-opacity-0">
@@ -19,7 +40,7 @@
                     </c-card_basic>
                 </a>
             {% endfor %}
+            <c-pagination />
         </div>
-        <c-pagination />
     </div>
 {% endblock content %}

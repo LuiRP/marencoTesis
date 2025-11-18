@@ -131,7 +131,6 @@ function refreshChatContainer() {
     fetch(window.location.href)
         .then(response => response.text())
         .then(html => {
-            // Parse the HTML and extract only the messages-container
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
             const newMessagesContainer = doc.getElementById('messages-container');
@@ -176,3 +175,43 @@ function refreshInboxContent() {
         })
         .catch(error => console.error('Error refreshing inbox:', error));
 }
+
+document.querySelector('#video-call-submit').onclick = function (e) {
+    const meetLink = 'https://meet.new';
+    window.open(meetLink, '_blank');
+};
+
+function convertGoogleMeetLinks() {
+    const elements = document.querySelectorAll('.message_content');
+
+    elements.forEach(element => {
+        if (element.querySelector('a') || element.closest('a')) {
+            return;
+        }
+
+        const text = element.textContent || element.innerText;
+
+        if (text.trim().startsWith('https://meet.google.com/')) {
+            const anchor = document.createElement('a');
+            anchor.href = text.trim();
+            anchor.textContent = text.trim();
+            anchor.target = '_blank';
+            anchor.rel = 'noopener noreferrer';
+
+            element.innerHTML = '';
+            element.appendChild(anchor);
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    convertGoogleMeetLinks();
+});
+
+document.addEventListener('htmx:afterSwap', function () {
+    convertGoogleMeetLinks();
+});
+
+document.addEventListener('htmx:load', function () {
+    convertGoogleMeetLinks();
+});

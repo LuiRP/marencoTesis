@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 {% block title %}
-    Cambiar contraseña
+    Información Basica
 {% endblock title %}
 {% block content %}
     <div class="h-100 d-flex flex-column gap-md-4 gap-2">
@@ -8,16 +8,25 @@
         <div class="d-flex flex-row justify-content-between align-items-center">
             <div class="d-flex w-100 ">
                 <div class="d-flex flex-grow-1 ">
-                    <h3 class="lead m-2">Cambiar contraseña</h3>
+                    <h3 class="lead m-2">Información basica</h3>
                 </div>
             </div>
         </div>
         </c-card_basic>
+        <c-card_basic class="d-flex flex-column gap-2">
         <c-form.form>
-        <c-form.form-control :field="form.oldpassword" />
-        <c-form.form-control :field="form.password1" />
-        <c-form.form-control :field="form.password2" />
+        <div class="d-flex gap-2 ">
+            <div class="flex-grow-1">
+                <c-form.form-control :field="form.first_name" />
+            </div>
+            <div class="flex-grow-1">
+                <c-form.form-control :field="form.last_name" />
+            </div>
+        </div>
+        <c-form.form-control :field="form.description" />
+        <c-form.form-control :field="form.profile_picture" />
         <c-form.form-button button_action="confirm" />
         </c-form.form>
+        </c-card_basic>
     </div>
 {% endblock content %}

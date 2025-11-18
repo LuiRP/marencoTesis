@@ -1,5 +1,5 @@
 from django import forms
-from .models import Review
+from .models import Review, CustomUser
 
 
 class ExpandedSignUpForm(forms.Form):
@@ -48,3 +48,33 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ["body", "rating"]
+
+
+class BasicUserForm(forms.ModelForm):
+    first_name = forms.CharField(
+        max_length=150,
+        required=True,
+        label="Nombre",
+        widget=forms.TextInput(attrs={"placeholder": "Nombre"}),
+    )
+    last_name = forms.CharField(
+        max_length=150,
+        required=True,
+        label="Apellido",
+        widget=forms.TextInput(attrs={"placeholder": "Apellido"}),
+    )
+    description = forms.CharField(
+        max_length=150,
+        required=True,
+        label="Descripción",
+        widget=forms.Textarea(attrs={"placeholder": "Descripción"}),
+    )
+    profile_picture = forms.ImageField(
+        label="Imagen de perfil",
+        required=False,
+        widget=forms.FileInput,
+    )
+
+    class Meta:
+        model = CustomUser
+        fields = ["first_name", "last_name", "description", "profile_picture"]

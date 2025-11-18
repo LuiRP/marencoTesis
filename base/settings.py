@@ -163,6 +163,8 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_SIGNUP_FORM_CLASS = "users.forms.ExpandedSignUpForm"
 
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/account"
+
 MESSAGE_TAGS = {
     messages.DEBUG: "debug",
     messages.INFO: "info",

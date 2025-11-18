@@ -1,10 +1,10 @@
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from .models import CustomUser, Review
-from .forms import ReviewForm
+from .forms import ReviewForm, BasicUserForm
 from notifications import models as NotificationModels
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -140,3 +140,22 @@ def get_star_list(rating):
         stars.append(0)
 
     return stars
+
+
+@login_required
+def options(request):
+    return render(request, "options/index.html")
+
+
+@login_required
+def account_basic(request):
+    if request.method == "POST":
+        form = BasicUserForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Información actualizada exitosamente.")
+            return redirect("profile", request.user.pk)
+    else:
+        form = BasicUserForm(instance=request.user)
+    context = {"form": form}
+    return render(request, "options/change_basic.html", context)

@@ -1,19 +1,49 @@
 {% extends "layouts/base.html" %}
 {% load i18n %}
 {% block title %}
-    Confirmar Dirección de Correo
+    Confirmar correo electronico
 {% endblock title %}
 {% block content %}
-    {% if confirmation %}
-        {% if can_confirm %}
-            <p class="form-text">Confirmar dirección de correo electrónico</p>
-            <c-form url="{% url 'account_confirm_email' confirmation.key %}">
-            <c-form-button button_action="confirm" />
-            </c-form>
+    <div class="h-100 d-flex flex-column gap-md-4 gap-2">
+        <c-card_basic class="h-auto d-flex flex-column gap-2 justify-content-between">
+        <div class="d-flex flex-row justify-content-between align-items-center">
+            <div class="d-flex w-100">
+                <div class="d-flex flex-grow-1">
+                    <h3 class="lead m-2">Confirmar correo electronico</h3>
+                </div>
+            </div>
+        </div>
+        </c-card_basic>
+        {% if confirmation %}
+            {% if can_confirm %}
+                <c-form.form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+                {% csrf_token %}
+                <p class="form-text m-2">Confirmar dirección de correo electrónico</p>
+                <c-form.form-button button_action="confirm" text="{% trans 'Confirm Email' %}" />
+                </c-form.form>
+            {% else %}
+                <c-card_basic class="h-auto d-flex flex-column gap-2 justify-content-between">
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <div class="d-flex w-100">
+                        <div class="d-flex flex-grow-1">
+                            <p class="form-text m-2">Esta dirección de correo ya está confirmada por otra cuenta.</p>
+                        </div>
+                    </div>
+                </div>
+                </c-card_basic>
+            {% endif %}
         {% else %}
-            <p class="form-text">Esta dirección de correo ya está confirmada por otra cuenta.</p>
+            <c-card_basic class="h-auto d-flex flex-column gap-2 justify-content-between">
+            <div class="d-flex flex-row justify-content-between align-items-center">
+                <div class="d-flex w-100">
+                    <div class="d-flex flex-grow-1">
+                        <p class="form-text m-2">
+                            Este enlace ha caducado o no es válido. Por favor, envíe una nueva solicitud de confirmación.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            </c-card_basic>
         {% endif %}
-    {% else %}
-        <p class="form-text">Este enlace ha caducado o no es válido. Por favor, envíe una nueva solicitud de confirmación.</p>
-    {% endif %}
+    </div>
 {% endblock content %}

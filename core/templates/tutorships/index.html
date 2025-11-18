@@ -44,7 +44,7 @@
             {% endif %}
         </div>
         </c-card_basic>
-        <div id="content" class="d-flex flex-column gap-2">
+        <div id="content" class="h-100 d-flex flex-column gap-2">
             {% for tutorship in page_obj %}
                 <c-card_basic class="h-auto d-flex flex-column gap-2">
                 <div class="d-flex justify-content-between">
@@ -52,7 +52,8 @@
                         <img src="{{ tutorship.tutor.profile_picture.url }}"
                              alt=""
                              width="50px"
-                             height="50px">
+                             height="50px"
+                             class="rounded-2">
                         <div class="d-flex flex-column ">
                             <div>{{ tutorship.tutor.first_name }} {{ tutorship.tutor.last_name }}</div>
                             <div>{{ tutorship.tutor.email }}</div>
@@ -90,7 +91,7 @@
                 </div>
                 </c-card_basic>
             {% endfor %}
+            <c-pagination />
         </div>
-        <c-pagination />
     </div>
 {% endblock content %}

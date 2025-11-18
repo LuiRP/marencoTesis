@@ -2,7 +2,8 @@
 <form action=""
       method="post"
       class="form needs-validation d-flex flex-column h-100"
-      novalidate>
+      novalidate
+      enctype="multipart/form-data">
   {% csrf_token %}
   {{ slot }}
 </form>

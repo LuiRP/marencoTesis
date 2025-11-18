@@ -10,10 +10,13 @@ from django.core.paginator import Paginator
 
 @login_required
 def notifications(request):
+    filter_query = request.GET.get("filter", "")
     notifications = Notification.objects.filter(receiver=request.user).order_by(
         "-created_at"
     )
-    paginator = Paginator(notifications, 5)
+    if filter_query:
+        notifications = notifications.filter(type=filter_query)
+    paginator = Paginator(notifications, 4)
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)

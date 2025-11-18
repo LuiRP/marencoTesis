@@ -3,9 +3,20 @@
     Inicio de Sesión
 {% endblock title %}
 {% block content %}
-    <c-form.form>
-    <c-form.form-control :field="form.login" />
-    <c-form.form-control :field="form.password" />
-    <c-form.form-button button_action="confirm" />
-    </c-form.form>
+    <div class="h-100 d-flex flex-column gap-md-4 gap-2">
+        <c-card_basic class="h-auto d-flex flex-column gap-2 justify-content-between">
+        <div class="d-flex flex-row justify-content-between align-items-center">
+            <div class="d-flex w-100 ">
+                <div class="d-flex flex-grow-1 ">
+                    <h3 class="lead m-2">Inicio de Sesión</h3>
+                </div>
+            </div>
+        </div>
+        </c-card_basic>
+        <c-form.form>
+        <c-form.form-control :field="form.login" />
+        <c-form.form-control :field="form.password" />
+        <c-form.form-button button_action="confirm" class="mt-2" />
+        </c-form.form>
+    </div>
 {% endblock content %}
