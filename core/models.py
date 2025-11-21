@@ -44,3 +44,28 @@ class Tutorship(models.Model):
     tutor = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     description = models.TextField("Descripcion de la tutoria")
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class TimePeriod(models.Model):
+    WEEK_DAYS = [
+        ("lunes", "Lunes"),
+        ("martes", "Martes"),
+        ("miercoles", "Miercoles"),
+        ("jueves", "Jueves"),
+        ("viernes", "Viernes"),
+        ("sabado", "Sabado"),
+        ("domingo", "Domingo"),
+    ]
+    tutor = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="tutor"
+    )
+    student = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="student",
+    )
+    week_day = models.CharField("Dia de la semana", choices=WEEK_DAYS)
+    start_time = models.TimeField()
+    end_time = models.TimeField(null=True, blank=True)

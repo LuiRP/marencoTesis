@@ -1,0 +1,19 @@
+{% extends "layouts/base.html" %}
+{% block title %}
+    Horario
+{% endblock title %}
+{% block content %}
+    <div class="h-100 d-flex flex-column gap-md-4 gap-2">
+        <c-card_basic class="h-auto d-flex flex-column gap-2">
+        <div class="d-flex flex-row justify-content-between align-items-center">
+            <div class="d-flex">
+                <h3 class="lead m-2">Horario</h3>
+            </div>
+            <a href="{% url "create_timetable" %}"
+               class="btn btn-primary text-white">Crear Horario</a>
+        </div>
+        </c-card_basic>
+        <c-card_basic class="h-auto d-flex flex-column gap-2">
+        </c-card_basic>
+    </div>
+{% endblock content %}
