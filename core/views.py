@@ -101,17 +101,14 @@ WEEK_DAYS = [
 
 
 @login_required
-def timetable(request):
-    periods = TimePeriod.objects.filter(tutor=request.user).order_by("start_time")
+def timetable(request, user_id):
+    periods = TimePeriod.objects.filter(tutor=user_id).order_by("start_time")
     periods_by_day = {}
     for day_code, day_name in WEEK_DAYS:
         periods_by_day[day_code] = periods.filter(week_day=day_code)
 
     context = {"week_days": WEEK_DAYS, "periods_by_day": periods_by_day}
-    if not request.user.is_tutor:
-        return render(request, "timetable/index_student.html", context)
-    else:
-        return render(request, "timetable/index_tutor.html", context)
+    return render(request, "timetable/index_tutor.html", context)
 
 
 @login_required
@@ -134,7 +131,7 @@ def create_timetable(request, week_day):
                 period.save()
 
                 messages.success(request, "Periodo creado exitosamente.")
-                return redirect(reverse("timetable"))
+                return redirect(reverse("timetable", args=[request.user.pk]))
 
             except ValidationError as e:
                 error_message = " ".join(e.messages)
@@ -150,11 +147,17 @@ def create_timetable(request, week_day):
 def edit_timetable(request, period_id):
     try:
         period = TimePeriod.objects.get(id=period_id, tutor=request.user)
+        if period.student:
+            messages.error(
+                request,
+                "No puedes editar un periodo que ya tiene un estudiante asignado.",
+            )
+            return redirect(reverse("timetable", args=[request.user.pk]))
     except TimePeriod.DoesNotExist:
         messages.error(
             request, "El periodo no existe o no tienes permisos para editarlo."
         )
-        return redirect(reverse("timetable"))
+        return redirect(reverse("timetable", args=[request.user.pk]))
 
     if request.method == "POST":
         form = TimePeriodForm(request.POST, instance=period)
@@ -164,7 +167,7 @@ def edit_timetable(request, period_id):
                 updated_period.save()
 
                 messages.success(request, "Periodo actualizado exitosamente.")
-                return redirect(reverse("timetable"))
+                return redirect(reverse("timetable", args=[request.user.pk]))
 
             except ValidationError as e:
                 error_message = " ".join(e.messages)
@@ -185,11 +188,55 @@ def edit_timetable(request, period_id):
 def delete_timetable(request, period_id):
     try:
         period = TimePeriod.objects.get(id=period_id, tutor=request.user)
-        period.delete()
-        messages.success(request, "Periodo eliminado exitosamente.")
+        if period.student:
+            messages.error(
+                request,
+                "No puedes eliminar un periodo que ya tiene un estudiante asignado.",
+            )
+        else:
+            period.delete()
+            messages.success(request, "Periodo eliminado exitosamente.")
     except TimePeriod.DoesNotExist:
         messages.error(
             request, "El periodo no existe o no tienes permisos para eliminarlo."
         )
+    return redirect(reverse("timetable", args=[request.user.pk]))
 
-    return redirect(reverse("timetable"))
+
+@login_required
+def add_student(request, period_id):
+    if request.user.is_tutor:
+        raise PermissionDenied()
+    try:
+        period = TimePeriod.objects.get(id=period_id)
+        if period.student:
+            messages.error(request, "Este periodo ya está reservado.")
+        else:
+            period.student = request.user
+            period.save()
+            messages.success(request, "Periodo reservado exitosamente.")
+
+    except TimePeriod.DoesNotExist:
+        messages.error(request, "El periodo no existe.")
+    return redirect(reverse("timetable", args=[period.tutor.pk]))
+
+
+@login_required
+def remove_student(request, period_id):
+    try:
+        period = TimePeriod.objects.get(id=period_id)
+
+        if request.user != period.tutor and request.user != period.student:
+            raise PermissionDenied()
+
+        if not period.student:
+            messages.error(request, "Este periodo no está reservado.")
+        else:
+            period.student = None
+            period.save()
+            messages.success(request, "Reserva eliminada exitosamente.")
+
+    except TimePeriod.DoesNotExist:
+        messages.error(request, "El periodo no existe.")
+
+    return redirect(reverse("timetable", args=[period.tutor.pk]))

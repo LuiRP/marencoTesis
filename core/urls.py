@@ -9,6 +9,8 @@ from .views import (
     create_timetable,
     edit_timetable,
     delete_timetable,
+    add_student,
+    remove_student,
 )
 
 urlpatterns = [
@@ -23,10 +25,16 @@ urlpatterns = [
         tutorship_delete,
         name="tutorship_delete",
     ),
-    path("timetable/", timetable, name="timetable"),
+    path("timetable/<int:user_id>", timetable, name="timetable"),
     path("timetable/create/<str:week_day>", create_timetable, name="create_timetable"),
     path("timetable/edit/<int:period_id>/", edit_timetable, name="edit_timetable"),
     path(
         "timetable/delete/<int:period_id>/", delete_timetable, name="delete_timetable"
+    ),
+    path("timetable/add_student/<int:period_id>/", add_student, name="add_student"),
+    path(
+        "timetable/remove_student/<int:period_id>/",
+        remove_student,
+        name="remove_student",
     ),
 ]

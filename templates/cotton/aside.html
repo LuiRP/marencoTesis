@@ -12,7 +12,7 @@
                 <c-aside-item text="Mi perfil" url="{% url "profile" request.user.pk %}"><i class="bi bi-person"></i></c-aside-item>
                 <c-aside-item text="Tutorias" url="{% url "tutorships" %}"><i class="bi bi-file-earmark-text"></i></c-aside-item>
                 <c-aside-item text="Mensajes" url="{% url "inbox" %}"><i class="bi bi-chat-dots"></i></c-aside-item>
-                <c-aside-item text="Horario" url="{% url "timetable" %}"><i class="bi bi-calendar"></i></c-aside-item>
+                <c-aside-item text="Horario" url="{% url "timetable" request.user.pk %}"><i class="bi bi-calendar"></i></c-aside-item>
             {% else %}
                 <c-aside-item text="Inicio de Sesión" url="{% url "account_login" %}"><i class="bi bi-file-earmark-text"></i></c-aside-item>
                 <c-aside-item text="Crear cuenta" url="{% url "account_signup" %}"><i class="bi bi-chat-dots"></i></c-aside-item>

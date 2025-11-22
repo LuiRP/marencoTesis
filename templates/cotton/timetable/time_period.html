@@ -2,23 +2,57 @@
     <span class="form-control d-flex justify-content-between">
         <span>{{ period.start_time|time:"g:i A" }} - {{ period.end_time|time:"g:i A" }}</span>
         {% if period.student %}
-            <a href="">
-                <span class="badge d-flex text-bg-primary text-white align-items-center">{{ period.student.first_name }} {{ period.student.last_name }}</span>
-            </a>
+            {% if request.user.is_tutor %}
+                <a href="{% url "profile" period.student.pk %}">
+                    <span class="badge h-100 d-flex text-bg-primary text-white align-items-center">{{ period.student.first_name }} {{ period.student.last_name }}</span>
+                </a>
+            {% else %}
+                <a href="{% url "profile" period.tutor.pk %}">
+                    <span class="badge h-100 d-flex text-bg-primary text-white align-items-center">{{ period.tutor.first_name }} {{ period.tutor.last_name }}</span>
+                </a>
+            {% endif %}
         {% else %}
             <span class="badge d-flex text-bg-secondary text-white align-items-center">Disponible</span>
         {% endif %}
     </span>
-    <div>
-        <form action="{% url 'delete_timetable' period.id %}">
-            {% csrf_token %}
-            <button class="btn btn-outline-danger">
-                <i class="bi bi-x-circle"></i>
-            </button>
-        </form>
-    </div>
-    <div>
-        <a href="{% url "edit_timetable" period.pk %}"
-           class="btn btn-outline-primary"><i class="bi bi-pencil"></i></a>
-    </div>
+    {% if request.user == period.tutor %}
+        <div>
+            <form action="{% url 'delete_timetable' period.id %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-danger">
+                    <i class="bi bi-x-circle"></i>
+                </button>
+            </form>
+        </div>
+        <div>
+            <a href="{% url "edit_timetable" period.pk %}"
+               class="btn btn-outline-primary"><i class="bi bi-pencil"></i></a>
+        </div>
+        {% if period.student %}
+            <div>
+                <form action="{% url 'remove_student' period.id %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-danger">
+                        <i class="bi bi-person-dash"></i>
+                    </button>
+                </form>
+            </div>
+        {% endif %}
+    {% else %}
+        {% if period.student %}
+            <form action="{% url 'remove_student' period.id %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-danger">
+                    <i class="bi bi-person-dash"></i>
+                </button>
+            </form>
+        {% else %}
+            <form action="{% url 'add_student' period.id %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-primary">
+                    <i class="bi bi-person-add"></i>
+                </button>
+            </form>
+        {% endif %}
+    {% endif %}
 </div>
