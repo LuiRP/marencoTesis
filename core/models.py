@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+from django.db.models import Q
 
 CustomUser = get_user_model()
 
@@ -69,3 +71,29 @@ class TimePeriod(models.Model):
     week_day = models.CharField("Dia de la semana", choices=WEEK_DAYS)
     start_time = models.TimeField()
     end_time = models.TimeField(null=True, blank=True)
+
+    def clean(self):
+        super().clean()
+
+        if self.start_time and self.end_time and self.tutor and self.week_day:
+            overlapping_periods = (
+                TimePeriod.objects.filter(tutor=self.tutor, week_day=self.week_day)
+                .filter(Q(start_time__lt=self.end_time, end_time__gt=self.start_time))
+                .exclude(pk=self.pk)
+            )
+
+            if overlapping_periods.exists():
+                raise ValidationError(
+                    "Este periodo se superpone con otro periodo existente en el mismo día."
+                )
+
+    def save(self, *args, **kwargs):
+        if self.start_time and not self.end_time:
+            from datetime import datetime, timedelta
+
+            start_datetime = datetime.combine(datetime.today(), self.start_time)
+            end_datetime = start_datetime + timedelta(hours=1)
+            self.end_time = end_datetime.time()
+
+        self.full_clean()
+        super().save(*args, **kwargs)

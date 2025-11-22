@@ -215,3 +215,33 @@ document.addEventListener('htmx:afterSwap', function () {
 document.addEventListener('htmx:load', function () {
     convertGoogleMeetLinks();
 });
+
+
+function handleTimeChange(input) {
+    const container = input.closest('.time-input');
+    const endTimeInput = container.querySelector('input[name="end_time"]');
+
+    if (input.value) {
+        const startTime = new Date(`2000-01-01T${input.value}`);
+        startTime.setHours(startTime.getHours() + 1);
+        const endTimeString = startTime.toTimeString().slice(0, 5);
+
+        endTimeInput.value = endTimeString;
+    }
+}
+function toggleEmptyDays(checkbox) {
+    console.log('hi - checkbox checked:', checkbox.checked);
+
+    const cards = document.querySelectorAll('.card.shadow-sm.border-0.p-2.col.h-auto.d-flex.flex-column.gap-2');
+
+    cards.forEach(card => {
+        const timeInputContainer = card.querySelector('.time-input-container');
+        const noPeriodsText = timeInputContainer.querySelector('p.text-muted');
+        const hasNoPeriods = noPeriodsText && noPeriodsText.textContent.includes('No hay periodos programados');
+        if (checkbox.checked && hasNoPeriods) {
+            card.classList.add('d-none');
+        } else {
+            card.classList.remove('d-none');
+        }
+    });
+}

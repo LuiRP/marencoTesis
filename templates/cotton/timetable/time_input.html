@@ -1,0 +1,12 @@
+<div class="d-flex gap-2 align-items-center time-input ">
+    <input type="time"
+           class="form-control time-inputs"
+           step="600"
+           onchange="handleTimeChange(this);"
+           name="start_time">
+    <span>-</span>
+    <input type="time" class="form-control" disabled name="end_time">
+    <button class="btn btn-danger">
+        <i class="bi bi-x-circle"></i>
+    </button>
+</div>

@@ -7,7 +7,8 @@ from .views import (
     tutorship_delete,
     timetable,
     create_timetable,
-    save_time_range,
+    edit_timetable,
+    delete_timetable,
 )
 
 urlpatterns = [
@@ -23,5 +24,9 @@ urlpatterns = [
         name="tutorship_delete",
     ),
     path("timetable/", timetable, name="timetable"),
-    path("timetable/create", create_timetable, name="create_timetable"),
+    path("timetable/create/<str:week_day>", create_timetable, name="create_timetable"),
+    path("timetable/edit/<int:period_id>/", edit_timetable, name="edit_timetable"),
+    path(
+        "timetable/delete/<int:period_id>/", delete_timetable, name="delete_timetable"
+    ),
 ]

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Tutorship
+from .models import Tutorship, TimePeriod
 
 
 class TutorshipForm(forms.ModelForm):
@@ -11,3 +11,12 @@ class TutorshipForm(forms.ModelForm):
     class Meta:
         model = Tutorship
         fields = ["name", "description"]
+
+
+class TimePeriodForm(forms.ModelForm):
+    class Meta:
+        model = TimePeriod
+        fields = ["start_time"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

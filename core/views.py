@@ -2,13 +2,15 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseRedirect, HttpResponse
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, BadRequest
 from django.core.paginator import Paginator
-from .forms import TutorshipForm
+from .forms import TutorshipForm, TimePeriodForm
 from .models import Tutorship, TimePeriod
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.db.models import Q
+from datetime import datetime, timedelta
+from django.core.exceptions import ValidationError
 
 
 # Create your views here.
@@ -87,24 +89,107 @@ def tutorship_delete(request, tutorship_id):
     return render(request, "tutorships/delete.html")
 
 
+WEEK_DAYS = [
+    ("lunes", "Lunes"),
+    ("martes", "Martes"),
+    ("miercoles", "Miercoles"),
+    ("jueves", "Jueves"),
+    ("viernes", "Viernes"),
+    ("sabado", "Sabado"),
+    ("domingo", "Domingo"),
+]
+
+
+@login_required
 def timetable(request):
+    periods = TimePeriod.objects.filter(tutor=request.user).order_by("start_time")
+    periods_by_day = {}
+    for day_code, day_name in WEEK_DAYS:
+        periods_by_day[day_code] = periods.filter(week_day=day_code)
+
+    context = {"week_days": WEEK_DAYS, "periods_by_day": periods_by_day}
+    if not request.user.is_tutor:
+        return render(request, "timetable/index_student.html", context)
+    else:
+        return render(request, "timetable/index_tutor.html", context)
+
+
+@login_required
+def create_timetable(request, week_day):
     if not request.user.is_tutor:
         raise PermissionDenied()
-    return render(request, "timetable/index_tutor.html")
-
-
-def create_timetable(request):
-    WEEK_DAYS = [
-        ("lunes", "Lunes"),
-        ("martes", "Martes"),
-        ("miercoles", "Miercoles"),
-        ("jueves", "Jueves"),
-        ("viernes", "Viernes"),
-        ("sabado", "Sabado"),
-        ("domingo", "Domingo"),
-    ]
+    week_days_dict = dict(WEEK_DAYS)
+    if not week_day in week_days_dict.keys():
+        raise BadRequest()
     if not request.user.is_tutor:
         raise PermissionDenied()
 
-    context = {"week_days": WEEK_DAYS}
+    if request.method == "POST":
+        form = TimePeriodForm(request.POST)
+        if form.is_valid():
+            try:
+                period = form.save(commit=False)
+                period.week_day = week_day
+                period.tutor = request.user
+                period.save()
+
+                messages.success(request, "Periodo creado exitosamente.")
+                return redirect(reverse("timetable"))
+
+            except ValidationError as e:
+                error_message = " ".join(e.messages)
+                messages.error(request, error_message)
+
+    else:
+        form = TimePeriodForm()
+    context = {"day": (week_day, week_days_dict[week_day]), "form": form}
     return render(request, "timetable/create.html", context)
+
+
+@login_required
+def edit_timetable(request, period_id):
+    try:
+        period = TimePeriod.objects.get(id=period_id, tutor=request.user)
+    except TimePeriod.DoesNotExist:
+        messages.error(
+            request, "El periodo no existe o no tienes permisos para editarlo."
+        )
+        return redirect(reverse("timetable"))
+
+    if request.method == "POST":
+        form = TimePeriodForm(request.POST, instance=period)
+        if form.is_valid():
+            try:
+                updated_period = form.save(commit=False)
+                updated_period.save()
+
+                messages.success(request, "Periodo actualizado exitosamente.")
+                return redirect(reverse("timetable"))
+
+            except ValidationError as e:
+                error_message = " ".join(e.messages)
+                messages.error(request, error_message)
+    else:
+        form = TimePeriodForm(instance=period)
+
+    week_days_dict = dict(WEEK_DAYS)
+    context = {
+        "form": form,
+        "period": period,
+        "day": (period.week_day, week_days_dict.get(period.week_day, "")),
+    }
+    return render(request, "timetable/edit.html", context)
+
+
+@login_required
+def delete_timetable(request, period_id):
+    try:
+        period = TimePeriod.objects.get(id=period_id, tutor=request.user)
+        period.delete()
+        messages.success(request, "Periodo eliminado exitosamente.")
+    except TimePeriod.DoesNotExist:
+        messages.error(
+            request, "El periodo no existe o no tienes permisos para eliminarlo."
+        )
+
+    return redirect(reverse("timetable"))

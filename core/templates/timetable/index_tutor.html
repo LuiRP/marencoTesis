@@ -8,12 +8,74 @@
         <div class="d-flex flex-row justify-content-between align-items-center">
             <div class="d-flex">
                 <h3 class="lead m-2">Horario</h3>
+                <div class="form-check form-switch w-100 align-content-center ms-1">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           role="switch"
+                           onchange="toggleEmptyDays(this)"
+                           id="switchCheckEmpty">
+                    <label class="form-check-label" for="switchCheckEmpty">Ocultar días sin periodos</label>
+                </div>
             </div>
-            <a href="{% url "create_timetable" %}"
-               class="btn btn-primary text-white">Crear Horario</a>
         </div>
         </c-card_basic>
-        <c-card_basic class="h-auto d-flex flex-column gap-2">
-        </c-card_basic>
+        <div class="row w-100 m-0 row-cols-1 gap-md-4 gap-2">
+            {% for day in week_days %}
+                <c-card_basic class="col h-auto d-flex flex-column gap-2">
+                <div class="d-flex justify-content-between align-items-center ">
+                    <h2 class="lead">{{ day.1 }}</h2>
+                    <a href="{% url "create_timetable" day.0 %}"
+                       class="btn btn-primary text-white time-input-add">
+                        <i class="bi bi-plus-circle"></i>
+                    </a>
+                </div>
+                <div class="time-input-container d-flex flex-column gap-2">
+                    {% if day.0 == 'lunes' %}
+                        {% for period in periods_by_day.lunes %}
+                            <c-timetable.time_period />
+                        {% empty %}
+                            <p class="text-muted mb-0">No hay periodos programados</p>
+                        {% endfor %}
+                    {% elif day.0 == 'martes' %}
+                        {% for period in periods_by_day.martes %}
+                            <c-timetable.time_period />
+                        {% empty %}
+                            <p class="text-muted mb-0">No hay periodos programados</p>
+                        {% endfor %}
+                    {% elif day.0 == 'miercoles' %}
+                        {% for period in periods_by_day.miercoles %}
+                            <c-timetable.time_period />
+                        {% empty %}
+                            <p class="text-muted mb-0">No hay periodos programados</p>
+                        {% endfor %}
+                    {% elif day.0 == 'jueves' %}
+                        {% for period in periods_by_day.jueves %}
+                            <c-timetable.time_period />
+                        {% empty %}
+                            <p class="text-muted mb-0">No hay periodos programados</p>
+                        {% endfor %}
+                    {% elif day.0 == 'viernes' %}
+                        {% for period in periods_by_day.viernes %}
+                            <c-timetable.time_period />
+                        {% empty %}
+                            <p class="text-muted mb-0">No hay periodos programados</p>
+                        {% endfor %}
+                    {% elif day.0 == 'sabado' %}
+                        {% for period in periods_by_day.sabado %}
+                            <c-timetable.time_period />
+                        {% empty %}
+                            <p class="text-muted mb-0">No hay periodos programados</p>
+                        {% endfor %}
+                    {% elif day.0 == 'domingo' %}
+                        {% for period in periods_by_day.sabado %}
+                            <c-timetable.time_period />
+                        {% empty %}
+                            <p class="text-muted mb-0">No hay periodos programados</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                </c-card_basic>
+            {% endfor %}
+        </div>
     </div>
 {% endblock content %}
