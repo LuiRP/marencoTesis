@@ -30,7 +30,7 @@ def tutorships(request):
         tutorships = tutorships.filter(
             Q(name__icontains=search_query) | Q(description__icontains=search_query)
         )
-    paginator = Paginator(tutorships, 2)
+    paginator = Paginator(tutorships, 5)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     context = {
