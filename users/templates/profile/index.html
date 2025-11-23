@@ -45,8 +45,8 @@
         </div>
         <div class="flex-grow-1 bg-primary-subtle  rounded-2 text-start p-2">
             <p>
-                {% if request.user.description %}
-                    {{ request.user.description }}
+                {% if user.description %}
+                    {{ user.description }}
                 {% else %}
                     Este usuario no ha establecido una descripcion
                 {% endif %}
@@ -58,7 +58,8 @@
                    href="{% url "get_or_create_chat_thread" user.pk %}">
                     <i class="bi bi-chat-dots"></i> Contactar
                 </a>
-                <a class="btn btn-outline-secondary">
+                <a class="btn btn-outline-secondary"
+                   href="{% url "timetable" user.pk %}">
                     <i class="bi bi-calendar"></i> Ver horario
                 </a>
             {% endif %}

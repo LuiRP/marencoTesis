@@ -40,12 +40,14 @@
         {% endif %}
     {% else %}
         {% if period.student %}
-            <form action="{% url 'remove_student' period.id %}">
-                {% csrf_token %}
-                <button class="btn btn-outline-danger">
-                    <i class="bi bi-person-dash"></i>
-                </button>
-            </form>
+            {% if period.student == request.user or period.tutor == request.user %}
+                <form action="{% url 'remove_student' period.id %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-danger">
+                        <i class="bi bi-person-dash"></i>
+                    </button>
+                </form>
+            {% endif %}
         {% else %}
             <form action="{% url 'add_student' period.id %}">
                 {% csrf_token %}
