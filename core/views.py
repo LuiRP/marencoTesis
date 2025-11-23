@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.db.models import Q
 from datetime import datetime, timedelta
 from django.core.exceptions import ValidationError
+from notifications import models as NotificationModels
 
 
 # Create your views here.
@@ -215,6 +216,12 @@ def add_student(request, period_id):
             period.student = request.user
             period.save()
             messages.success(request, "Periodo reservado exitosamente.")
+            notifification = NotificationModels.Notification(
+                type="reserva",
+                body="ha reservado un periodo",
+                action_user=request.user,
+                receiver=period.tutor,
+            )
 
     except TimePeriod.DoesNotExist:
         messages.error(request, "El periodo no existe.")
