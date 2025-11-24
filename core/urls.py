@@ -11,11 +11,19 @@ from .views import (
     delete_timetable,
     add_student,
     remove_student,
+    get_unread_count,
+    get_unread_count_notifications,
 )
 
 urlpatterns = [
     path("", index, name="index"),
     path("tutorships/", tutorships, name="tutorships"),
+    path("unread-count/", get_unread_count, name="unread_count"),
+    path(
+        "unread-count-notifications/",
+        get_unread_count_notifications,
+        name="unread_count_notifications",
+    ),
     path("tutorships/create", tutorship_create, name="tutorship_create"),
     path(
         "tutorships/edit/<int:tutorship_id>", tutorship_update, name="tutorship_update"

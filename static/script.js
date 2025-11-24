@@ -11,6 +11,8 @@ let eventSource;
 
 document.addEventListener('DOMContentLoaded', function () {
     startSSE();
+    updateUnreadBadge();
+    updateUnreadBadgeNotifications();
 });
 
 function startSSE() {
@@ -25,6 +27,8 @@ function startSSE() {
             const data = JSON.parse(event.data);
             refreshChatContainer();
             refreshInboxContent();
+            updateUnreadBadge();
+            updateUnreadBadgeNotifications();
 
             if (data.html) {
                 addToastFromHTML(data.html);
@@ -244,4 +248,98 @@ function toggleEmptyDays(checkbox) {
             card.classList.remove('d-none');
         }
     });
+}
+
+function updateUnreadBadge() {
+    fetch('/unread-count/')
+        .then(response => {
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const unreadCount = data.unread_count;
+            updateBadgeInAside(unreadCount);
+        })
+        .catch(error => console.error('Error fetching unread count:', error));
+}
+
+function updateBadgeInAside(unreadCount) {
+    const allLinks = document.querySelectorAll('a.btn');
+    let messagesLink = null;
+    allLinks.forEach(link => {
+        const textSpan = link.querySelector('span.d-none.d-md-inline');
+        if (textSpan && textSpan.textContent.trim() === 'Mensajes') {
+            messagesLink = link;
+        }
+    });
+
+    if (!messagesLink) return;
+    const badgeContainer = messagesLink.querySelector('.flex-grow-1');
+    if (!badgeContainer) return;
+    let badgeElement = messagesLink.querySelector('.unread-badge');
+
+    if (unreadCount > 0) {
+        if (!badgeElement) {
+            badgeElement = document.createElement('div');
+            badgeElement.className = 'unread-badge';
+            badgeElement.innerHTML = `<span class="badge text-bg-primary me-2 text-white">${unreadCount}</span>`;
+            badgeContainer.parentNode.insertBefore(badgeElement, badgeContainer.nextSibling);
+        } else {
+            badgeElement.innerHTML = `<span class="badge text-bg-primary me-2 text-white">${unreadCount}</span>`;
+        }
+        badgeElement.style.display = 'block';
+    } else if (badgeElement) {
+        badgeElement.style.display = 'none';
+    }
+}
+
+function updateUnreadBadgeNotifications() {
+    console.log("Hi");
+    fetch('/unread-count-notifications/')
+        .then(response => {
+            console.log(response);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const unreadCount = data.unread_count;
+            console.log(unreadCount);
+            updateBadgeInAsideNotifications(unreadCount);
+        })
+        .catch(error => console.error('Error fetching unread count:', error));
+}
+
+function updateBadgeInAsideNotifications(unreadCount) {
+    const allLinks = document.querySelectorAll('a.btn');
+    let messagesLink = null;
+    allLinks.forEach(link => {
+        const textSpan = link.querySelector('span.d-none.d-md-inline');
+        if (textSpan && textSpan.textContent.trim() === 'Notificaciones') {
+            messagesLink = link;
+        }
+    });
+
+    if (!messagesLink) return;
+    const badgeContainer = messagesLink.querySelector('.flex-grow-1');
+    if (!badgeContainer) return;
+    let badgeElement = messagesLink.querySelector('.unread-badge');
+
+    if (unreadCount > 0) {
+        if (!badgeElement) {
+            badgeElement = document.createElement('div');
+            badgeElement.className = 'unread-badge';
+            badgeElement.innerHTML = `<span class="badge text-bg-primary me-2 text-white">${unreadCount}</span>`;
+            badgeContainer.parentNode.insertBefore(badgeElement, badgeContainer.nextSibling);
+        } else {
+            badgeElement.innerHTML = `<span class="badge text-bg-primary me-2 text-white">${unreadCount}</span>`;
+        }
+        badgeElement.style.display = 'block';
+    } else if (badgeElement) {
+        badgeElement.style.display = 'none';
+    }
 }

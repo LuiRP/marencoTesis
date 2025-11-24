@@ -20,6 +20,8 @@ def notifications(request):
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+
+    notifications.filter(is_read=False).update(is_read=True)
     context = {
         "page_obj": page_obj,
     }

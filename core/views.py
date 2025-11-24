@@ -8,10 +8,12 @@ from .forms import TutorshipForm, TimePeriodForm
 from .models import Tutorship, TimePeriod
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.db.models import Q
+from django.db.models import Q, Max, Count, F, Subquery, OuterRef
 from datetime import datetime, timedelta
 from django.core.exceptions import ValidationError
 from notifications import models as NotificationModels
+from chat import models as ChatModels
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -255,3 +257,33 @@ def remove_student(request, period_id):
         return redirect(reverse("timetable", args=[period.tutor.pk]))
     else:
         return redirect(reverse("timetable", args=[request.user.pk]))
+
+
+@login_required
+def get_unread_count(request):
+    current_user = request.user
+    unread_count = (
+        ChatModels.ChatThread.objects.filter(
+            Q(user1=current_user) | Q(user2=current_user)
+        ).aggregate(
+            total_unread=Count(
+                "messages",
+                filter=Q(messages__is_read=False) & ~Q(messages__sender=current_user),
+            )
+        )[
+            "total_unread"
+        ]
+        or 0
+    )
+
+    return JsonResponse({"unread_count": unread_count})
+
+
+@login_required
+def get_unread_count_notifications(request):
+    current_user = request.user
+    unread_count = NotificationModels.Notification.objects.filter(
+        receiver=current_user, is_read=False
+    ).count()
+
+    return JsonResponse({"unread_count": unread_count})
