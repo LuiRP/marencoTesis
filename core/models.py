@@ -88,7 +88,7 @@ class TimePeriod(models.Model):
                 )
 
     def save(self, *args, **kwargs):
-        if self.start_time and not self.end_time:
+        if self.start_time:
             from datetime import datetime, timedelta
 
             start_datetime = datetime.combine(datetime.today(), self.start_time)

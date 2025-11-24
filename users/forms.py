@@ -67,7 +67,11 @@ class BasicUserForm(forms.ModelForm):
         max_length=150,
         required=True,
         label="Descripción",
-        widget=forms.Textarea(attrs={"placeholder": "Descripción"}),
+        widget=forms.Textarea(
+            attrs={
+                "placeholder": "¡Aun no tienes una descripción, escribe una para que los demas usuarios sepan acerca de ti!"
+            }
+        ),
     )
     profile_picture = forms.ImageField(
         label="Imagen de perfil",

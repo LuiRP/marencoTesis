@@ -80,4 +80,11 @@
             {% endfor %}
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        const checkbox = document.getElementById('switchCheckEmpty');
+        checkbox.checked = true;
+        toggleEmptyDays(checkbox);
+    });
+    </script>
 {% endblock content %}

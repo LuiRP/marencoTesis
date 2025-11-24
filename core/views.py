@@ -103,7 +103,13 @@ WEEK_DAYS = [
 
 @login_required
 def timetable(request, user_id):
-    periods = TimePeriod.objects.filter(tutor=user_id).order_by("start_time")
+    if user_id == request.user.pk:
+        if request.user.is_tutor:
+            periods = TimePeriod.objects.filter(tutor=user_id).order_by("start_time")
+        else:
+            periods = TimePeriod.objects.filter(student=user_id).order_by("start_time")
+    else:
+        periods = TimePeriod.objects.filter(tutor=user_id).order_by("start_time")
     periods_by_day = {}
     for day_code, day_name in WEEK_DAYS:
         periods_by_day[day_code] = periods.filter(week_day=day_code)
@@ -164,9 +170,7 @@ def edit_timetable(request, period_id):
         form = TimePeriodForm(request.POST, instance=period)
         if form.is_valid():
             try:
-                updated_period = form.save(commit=False)
-                updated_period.save()
-
+                form.save()
                 messages.success(request, "Periodo actualizado exitosamente.")
                 return redirect(reverse("timetable", args=[request.user.pk]))
 
@@ -216,12 +220,13 @@ def add_student(request, period_id):
             period.student = request.user
             period.save()
             messages.success(request, "Periodo reservado exitosamente.")
-            notifification = NotificationModels.Notification(
+            notification = NotificationModels.Notification(
                 type="reserva",
                 body="ha reservado un periodo",
                 action_user=request.user,
                 receiver=period.tutor,
             )
+            notification.save()
 
     except TimePeriod.DoesNotExist:
         messages.error(request, "El periodo no existe.")
@@ -246,4 +251,7 @@ def remove_student(request, period_id):
     except TimePeriod.DoesNotExist:
         messages.error(request, "El periodo no existe.")
 
-    return redirect(reverse("timetable", args=[period.tutor.pk]))
+    if request.user.is_tutor:
+        return redirect(reverse("timetable", args=[period.tutor.pk]))
+    else:
+        return redirect(reverse("timetable", args=[request.user.pk]))

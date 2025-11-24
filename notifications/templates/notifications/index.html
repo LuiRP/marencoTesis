@@ -27,18 +27,46 @@
         </c-card_basic>
         <div id="content" class="d-flex h-100 flex-column gap-2">
             {% for notification in page_obj %}
-                <a href="{% url "profile" notification.action_user.pk %}"
-                   class="link-underline link-underline-opacity-0">
-                    <c-card_basic class="h-auto d-flex flex-column gap-2">
-                    <div class="d-flex gap-2">
-                        <i class="bi bi-info-circle"></i>
-                        <p class="mb-0">
-                            {{ notification.action_user.first_name }} {{ notification.action_user.last_name }} ({{ notification.action_user.email }}) <span class="text-primary">{{ notification.body }}</span>.
-                        </p>
-                    </div>
-                    <div class="fw-lighter">{{ notification.created_at|timesince }}</div>
-                    </c-card_basic>
-                </a>
+                {% if notification.type == "mensaje" %}
+                    <a href="{% url "get_or_create_chat_thread" notification.action_user.pk %}"
+                       class="link-underline link-underline-opacity-0">
+                        <c-card_basic class="h-auto d-flex flex-column gap-2">
+                        <div class="d-flex gap-2">
+                            <i class="bi bi-info-circle"></i>
+                            <p class="mb-0">
+                                {{ notification.action_user.first_name }} {{ notification.action_user.last_name }} ({{ notification.action_user.email }}) <span class="text-primary">{{ notification.body }}</span>.
+                            </p>
+                        </div>
+                        <div class="fw-lighter">{{ notification.created_at|timesince }}</div>
+                        </c-card_basic>
+                    </a>
+                {% elif notification.type == "reserva" %}
+                    <a href="{% url "timetable" request.user.pk %}"
+                       class="link-underline link-underline-opacity-0">
+                        <c-card_basic class="h-auto d-flex flex-column gap-2">
+                        <div class="d-flex gap-2">
+                            <i class="bi bi-info-circle"></i>
+                            <p class="mb-0">
+                                {{ notification.action_user.first_name }} {{ notification.action_user.last_name }} ({{ notification.action_user.email }}) <span class="text-primary">{{ notification.body }}</span>.
+                            </p>
+                        </div>
+                        <div class="fw-lighter">{{ notification.created_at|timesince }}</div>
+                        </c-card_basic>
+                    </a>
+                {% else %}
+                    <a href="{% url "profile" request.user.pk %}"
+                       class="link-underline link-underline-opacity-0">
+                        <c-card_basic class="h-auto d-flex flex-column gap-2">
+                        <div class="d-flex gap-2">
+                            <i class="bi bi-info-circle"></i>
+                            <p class="mb-0">
+                                {{ notification.action_user.first_name }} {{ notification.action_user.last_name }} ({{ notification.action_user.email }}) <span class="text-primary">{{ notification.body }}</span>.
+                            </p>
+                        </div>
+                        <div class="fw-lighter">{{ notification.created_at|timesince }}</div>
+                        </c-card_basic>
+                    </a>
+                {% endif %}
             {% endfor %}
             <c-pagination />
         </div>

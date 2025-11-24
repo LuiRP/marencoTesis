@@ -48,7 +48,13 @@
                 {% if user.description %}
                     {{ user.description }}
                 {% else %}
-                    Este usuario no ha establecido una descripcion
+                    {% if request.user.pk == user.pk %}
+                        ¡Aun no tienes una descripción, escribe una para que los demas usuarios sepan acerca de ti!
+                        <br>
+                        <a href="{% url "options" %}">¡Toca aqui para agregar una!</a>
+                    {% else %}
+                        Este usuario no ha establecido una descripcion
+                    {% endif %}
                 {% endif %}
             </p>
         </div>
@@ -63,10 +69,87 @@
                     <i class="bi bi-calendar"></i> Ver horario
                 </a>
             {% endif %}
-            <a class="btn btn-outline-secondary" href="{% url "reviews" user.pk %}">
-                <i class="bi bi-bookmark"></i> Ver Reseñas
-            </a>
         </div>
         </c-card_basic>
+        <c-card_basic class="h-auto d-flex flex-column gap-2">
+        <div class="d-flex flex-row justify-content-between align-items-center">
+            <div class="d-flex">
+                <h3 class="lead m-2">Reseñas ({{ reviews_count }})</h3>
+            </div>
+            {% if not request.user.pk == user_id %}
+                <a href="{% url "review_create" user_id %}"
+                   class="btn btn-primary text-white">Crear reseña</a>
+            {% endif %}
+        </div>
+        </c-card_basic>
+        <div class="d-flex flex-column gap-2">
+            {% for review in page_obj %}
+                <c-card_basic class="h-auto d-flex flex-column gap-2">
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex gap-2">
+                        <a href="{% url "profile" review.author.pk %}">
+                            <img src="{{ review.author.profile_picture.url }}"
+                                 alt=""
+                                 width="50px"
+                                 height="50px"
+                                 class="rounded-2">
+                        </a>
+                        <div class="d-flex flex-column ">
+                            <div>
+                                {{ review.author.first_name }} {{ review.author.last_name }} <span class="badge rounded-pill text-white bg-primary">
+                                {% if user.is_tutor %}
+                                    Tutor
+                                {% else %}
+                                    Estudiante
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div>{{ review.author.email }}</div>
+                    </div>
+                </div>
+                {% if request.user == review.author %}
+                    <div class="dropdown">
+                        <button class="btn"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="{% url "review_update" user_id review.pk %}"
+                                   class="dropdown-item">Editar reseña</a>
+                            </li>
+                            <li>
+                                <a href="{% url "review_delete" user_id review.pk %}"
+                                   class="dropdown-item">Eliminar reseña</a>
+                            </li>
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+            <p>{{ review.body }}</p>
+            <div class="d-flex justify-content-between">
+                <span class="form-text">{{ review.created_at }}</span>
+                <div class="text-primary">
+                    {% for star in review.stars %}
+                        {% if star == 1 %}
+                            <i class="bi bi-star-fill"></i>
+                        {% elif star == 0.5 %}
+                            <i class="bi bi-star-half"></i>
+                        {% else %}
+                            <i class="bi bi-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            </c-card_basic>
+        {% empty %}
+            <c-card_basic class="h-auto d-flex flex-column gap-2">
+            <div>Este usuario no tiene reseñas.</div>
+            </c-card_basic>
+        {% endfor %}
     </div>
+    <c-pagination />
+</div>
 {% endblock content %}

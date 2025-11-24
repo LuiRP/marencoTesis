@@ -14,6 +14,16 @@ from django.db.models import Avg
 # Create your views here.
 @login_required
 def profile(request, user_id):
+    reviewed = get_object_or_404(CustomUser, pk=user_id)
+    reviews = Review.objects.filter(reviewed=reviewed).order_by("-created_at")
+    paginator = Paginator(reviews, 5)
+
+    reviews_count = reviews.count()
+
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    for review in page_obj:
+        review.stars = get_star_list(review.rating)
     try:
         user = CustomUser.objects.get(pk=user_id)
     except CustomUser.DoesNotExist:
@@ -38,28 +48,11 @@ def profile(request, user_id):
         "avg_rating": reviews_avg_rating,
         "stars": stars,
         "there_is_ratings": there_is_ratings,
-    }
-    return render(request, "profile/index.html", context)
-
-
-@login_required
-def reviews(request, user_id):
-    reviewed = get_object_or_404(CustomUser, pk=user_id)
-    reviews = Review.objects.filter(reviewed=reviewed).order_by("-created_at")
-    paginator = Paginator(reviews, 2)
-
-    reviews_count = reviews.count()
-
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-    for review in page_obj:
-        review.stars = get_star_list(review.rating)
-    context = {
         "page_obj": page_obj,
         "reviews_count": reviews_count,
         "user_id": user_id,
     }
-    return render(request, "reviews/index.html", context)
+    return render(request, "profile/index.html", context)
 
 
 @login_required
@@ -83,7 +76,7 @@ def review_create(request, user_id):
                 receiver=reviewed,
             )
             notifification.save()
-            redirect_url = reverse("reviews", kwargs={"user_id": reviewed.pk})
+            redirect_url = reverse("profile", kwargs={"user_id": reviewed.pk})
             return HttpResponseRedirect(redirect_url)
     else:
         form = ReviewForm()
@@ -102,7 +95,7 @@ def review_update(request, user_id, review_id):
         if form.is_valid():
             review = form.save()
             messages.success(request, "Reseña actualizada exitosamente.")
-            redirect_url = reverse("reviews", kwargs={"user_id": reviewed_id})
+            redirect_url = reverse("profile", kwargs={"user_id": reviewed_id})
             return HttpResponseRedirect(redirect_url)
     else:
         form = ReviewForm(instance=review)
@@ -119,7 +112,7 @@ def review_delete(request, user_id, review_id):
     if request.method == "POST":
         review.delete()
         messages.success(request, "Reseña eliminada exitosamente.")
-        redirect_url = reverse("reviews", kwargs={"user_id": reviewed_id})
+        redirect_url = reverse("profile", kwargs={"user_id": reviewed_id})
         return HttpResponseRedirect(redirect_url)
     return render(request, "reviews/delete.html")
 
@@ -144,11 +137,6 @@ def get_star_list(rating):
 
 @login_required
 def options(request):
-    return render(request, "options/index.html")
-
-
-@login_required
-def account_basic(request):
     if request.method == "POST":
         form = BasicUserForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
@@ -158,4 +146,4 @@ def account_basic(request):
     else:
         form = BasicUserForm(instance=request.user)
     context = {"form": form}
-    return render(request, "options/change_basic.html", context)
+    return render(request, "options/index.html", context)

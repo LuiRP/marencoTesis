@@ -13,8 +13,21 @@
             </div>
         </div>
         </c-card_basic>
+        <c-form.form>
+        <div class="d-flex gap-2 ">
+            <div class="flex-grow-1">
+                <c-form.form-control :field="form.first_name" />
+            </div>
+            <div class="flex-grow-1">
+                <c-form.form-control :field="form.last_name" />
+            </div>
+        </div>
+        <c-form.form-control :field="form.description" />
+        <label for="profile_picture" class="form-label">Foto de perfil</label>
+        <c-form.form-control :field="form.profile_picture" />
+        <c-form.form-button button_action="confirm" />
+        </c-form.form>
         <c-card_basic class="d-flex flex-column gap-2">
-        <a class="btn btn-outline-secondary" href="{% url "account_basic" %}">Cambiar información basica</a>
         <a class="btn btn-outline-secondary" href="{% url "account_email" %}">Cambiar correo electrónico</a>
         <a class="btn btn-outline-secondary"
            href="{% url "account_change_password" %}">Cambiar contraseña</a>
