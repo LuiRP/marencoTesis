@@ -69,7 +69,7 @@
                             <p class="text-muted mb-0">No hay periodos programados</p>
                         {% endfor %}
                     {% elif day.0 == 'domingo' %}
-                        {% for period in periods_by_day.sabado %}
+                        {% for period in periods_by_day.domingo %}
                             <c-timetable.time_period />
                         {% empty %}
                             <p class="text-muted mb-0">No hay periodos programados</p>

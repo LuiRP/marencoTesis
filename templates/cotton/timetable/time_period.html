@@ -30,27 +30,45 @@
         </div>
         {% if period.student %}
             <div>
-                <form action="{% url 'remove_student' period.id %}">
+                <form action="{% url 'remove_student' period.id %}"
+                      class="d-flex gap-2 align-items-center">
                     {% csrf_token %}
                     <button class="btn btn-outline-danger">
                         <i class="bi bi-person-dash"></i>
                     </button>
+                    <input type="text"
+                           value="{{ period.course.get_name_display }}"
+                           name="course_period"
+                           class="form-control"
+                           disabled>
                 </form>
             </div>
         {% endif %}
     {% else %}
         {% if period.student %}
             {% if period.student == request.user or period.tutor == request.user %}
-                <form action="{% url 'remove_student' period.id %}">
+                <form action="{% url 'remove_student' period.id %}"
+                      class="d-flex gap-2 align-items-center">
                     {% csrf_token %}
+                    <input type="text"
+                           value="{{ period.course.get_name_display }}"
+                           name="course_period"
+                           class="form-control"
+                           disabled>
                     <button class="btn btn-outline-danger">
                         <i class="bi bi-person-dash"></i>
                     </button>
                 </form>
             {% endif %}
         {% else %}
-            <form action="{% url 'add_student' period.id %}">
+            <form action="{% url 'add_student' period.id %}"
+                  class="d-flex gap-2 align-items-center"
+                  method="post">
                 {% csrf_token %}
+                <select name="course_period" class="form-select">
+                    <option value="" disabled selected>Selecciona un curso</option>
+                    {% for course in courses %}<option value="{{ course.id }}">{{ course.get_name_display }}</option>{% endfor %}
+                </select>
                 <button class="btn btn-outline-primary">
                     <i class="bi bi-person-add"></i>
                 </button>

@@ -105,6 +105,7 @@ WEEK_DAYS = [
 
 @login_required
 def timetable(request, user_id):
+    tutor_courses = Tutorship.objects.filter(tutor=user_id)
     if user_id == request.user.pk:
         if request.user.is_tutor:
             periods = TimePeriod.objects.filter(tutor=user_id).order_by("start_time")
@@ -116,7 +117,7 @@ def timetable(request, user_id):
     for day_code, day_name in WEEK_DAYS:
         periods_by_day[day_code] = periods.filter(week_day=day_code)
 
-    context = {"week_days": WEEK_DAYS, "periods_by_day": periods_by_day}
+    context = {"week_days": WEEK_DAYS, "periods_by_day": periods_by_day, "courses": tutor_courses}
     return render(request, "timetable/index_tutor.html", context)
 
 
@@ -214,26 +215,43 @@ def delete_timetable(request, period_id):
 def add_student(request, period_id):
     if request.user.is_tutor:
         raise PermissionDenied()
-    try:
-        period = TimePeriod.objects.get(id=period_id)
-        if period.student:
-            messages.error(request, "Este periodo ya está reservado.")
-        else:
-            period.student = request.user
-            period.save()
-            messages.success(request, "Periodo reservado exitosamente.")
-            notification = NotificationModels.Notification(
-                type="reserva",
-                body="ha reservado un periodo",
-                action_user=request.user,
-                receiver=period.tutor,
-            )
-            notification.save()
 
-    except TimePeriod.DoesNotExist:
-        messages.error(request, "El periodo no existe.")
+    # Use get_object_or_404 to avoid a crash if period_id is wrong
+    period = get_object_or_404(TimePeriod, id=period_id)
+
+    if request.method == "POST":
+        course_id = request.POST.get("course_period")
+
+        # FIX: Check if course_id is empty or None BEFORE querying
+        if not course_id:
+            messages.error(request, "Por favor, selecciona un curso antes de reservar.")
+            return redirect(reverse("timetable", args=[period.tutor.pk]))
+
+        try:
+            selected_course = Tutorship.objects.get(id=course_id)
+            
+            if period.student:
+                messages.error(request, "Este periodo ya está reservado.")
+            else:
+                period.student = request.user
+                period.course = selected_course
+                period.save()
+                
+                messages.success(request, f"Reservado: {selected_course.get_name_display()}")
+                
+                # Notification logic
+                NotificationModels.Notification.objects.create(
+                    type="reserva",
+                    body=f"ha reservado un periodo para {selected_course.get_name_display()}",
+                    action_user=request.user,
+                    receiver=period.tutor,
+                )
+        except Tutorship.DoesNotExist:
+            messages.error(request, "El curso seleccionado no es válido.")
+        except ValidationError as e:
+            messages.error(request, " ".join(e.messages))
+
     return redirect(reverse("timetable", args=[period.tutor.pk]))
-
 
 @login_required
 def remove_student(request, period_id):

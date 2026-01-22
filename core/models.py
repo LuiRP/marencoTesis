@@ -71,9 +71,15 @@ class TimePeriod(models.Model):
     week_day = models.CharField("Dia de la semana", choices=WEEK_DAYS)
     start_time = models.TimeField()
     end_time = models.TimeField(null=True, blank=True)
+    course = models.ForeignKey(Tutorship, on_delete=models.CASCADE, null=True, blank=True)
 
     def clean(self):
         super().clean()
+
+        if self.student and not self.course:
+            raise ValidationError({
+                'course': "Debe seleccionar un curso para asignar este horario."
+            })
 
         if self.start_time and self.end_time and self.tutor and self.week_day:
             overlapping_periods = (
