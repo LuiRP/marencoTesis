@@ -19,7 +19,10 @@ from django.http import JsonResponse
 # Create your views here.
 @login_required
 def index(request):
-    return render(request, "index.html")
+    if request.user.is_authenticated:
+        return redirect(reverse("tutorships"))
+    else:
+        return redirect(reverse("login"))
 
 
 @login_required
@@ -117,7 +120,11 @@ def timetable(request, user_id):
     for day_code, day_name in WEEK_DAYS:
         periods_by_day[day_code] = periods.filter(week_day=day_code)
 
-    context = {"week_days": WEEK_DAYS, "periods_by_day": periods_by_day, "courses": tutor_courses}
+    context = {
+        "week_days": WEEK_DAYS,
+        "periods_by_day": periods_by_day,
+        "courses": tutor_courses,
+    }
     return render(request, "timetable/index_tutor.html", context)
 
 
@@ -229,16 +236,18 @@ def add_student(request, period_id):
 
         try:
             selected_course = Tutorship.objects.get(id=course_id)
-            
+
             if period.student:
                 messages.error(request, "Este periodo ya está reservado.")
             else:
                 period.student = request.user
                 period.course = selected_course
                 period.save()
-                
-                messages.success(request, f"Reservado: {selected_course.get_name_display()}")
-                
+
+                messages.success(
+                    request, f"Reservado: {selected_course.get_name_display()}"
+                )
+
                 # Notification logic
                 NotificationModels.Notification.objects.create(
                     type="reserva",
@@ -252,6 +261,7 @@ def add_student(request, period_id):
             messages.error(request, " ".join(e.messages))
 
     return redirect(reverse("timetable", args=[period.tutor.pk]))
+
 
 @login_required
 def remove_student(request, period_id):
