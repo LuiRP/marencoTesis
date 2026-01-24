@@ -55,10 +55,13 @@
                 <div class="form-text mt-2">
                     {% blocktranslate %}Your email address is still pending verification.{% endblocktranslate %}
                 </div>
-                <button form="pending-email"
-                        type="submit"
-                        name="action_send"
-                        class="btn btn-outline-secondary btn-sm">{% trans 'Re-send Verification' %}</button>
+                <form method="post" action="{% url 'account_email' %}" class="d-grid">
+                    {% csrf_token %}
+                    <input type="hidden" name="email" value="{{ new_emailaddress.email }}">
+                    <button type="submit"
+                            name="action_send"
+                            class="btn btn-outline-secondary btn-sm">{% trans 'Re-send Verification' %}</button>
+                </form>
                 {% if current_emailaddress %}
                     <button form="pending-email"
                             type="submit"
