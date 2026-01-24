@@ -240,6 +240,18 @@ def add_student(request, period_id):
             if period.student:
                 messages.error(request, "Este periodo ya está reservado.")
             else:
+                student_overlaps = TimePeriod.objects.filter(
+                    student=request.user, week_day=period.week_day
+                ).filter(
+                    Q(start_time__lt=period.end_time, end_time__gt=period.start_time)
+                )
+
+                if student_overlaps.exists():
+                    messages.error(
+                        request,
+                        "No puedes reservar este periodo porque ya tienes otra tutoría en este mismo horario.",
+                    )
+                    return redirect(reverse("timetable", args=[period.tutor.pk]))
                 period.student = request.user
                 period.course = selected_course
                 period.save()
